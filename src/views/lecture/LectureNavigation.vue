@@ -125,7 +125,7 @@ export default defineComponent({
 
   created() {
     stat_instance({
-      url: "/stat_api/get_lecture_index",
+      url: "/jio_api/get_directory",
     })
       .then((response) => {
         this.lecture_index = response.data.detail;
