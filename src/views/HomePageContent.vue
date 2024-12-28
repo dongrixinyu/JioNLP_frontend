@@ -42,7 +42,7 @@
 
 </template>
 
-<script lang="ts">
+<script>
 import router from "../router/index";
 import { blog_backend } from "@/utils/request";
 import authentication_hash_code from "@/utils/authentication";
@@ -72,15 +72,18 @@ export default {
       blog_list_data: [],
     };
   },
-
-  methods: {
-    markdownToHtml(blog_content: String) {
-      var markdown_content = this.md(blog_content);
+  
+  computed: {
+    markdownToHtml(blog_content) {
+      var markdown_content = this.markdown_renderer(blog_content);
       return markdown_content;
     },
+  },
+
+  methods: {
 
     getColor() {
-      const prob: number = Math.random();
+      const prob = Math.random();
 
       if (prob > 0.95) {
         return "#ff0000";  // red

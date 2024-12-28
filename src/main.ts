@@ -1,10 +1,8 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
-// import VueMathjax from 'vue-mathjax-next'
 import { createMetaManager } from "vue-meta";
 import { marked } from "marked";
-// import { katex } from 'katex';
 import Antd from "ant-design-vue";
 import "ant-design-vue/dist/antd.css";
 
@@ -16,7 +14,7 @@ const backend_port = config.backend_port;
 const blog_asset_host = config.blog_asset_host;
 
 const renderer = new marked.Renderer();
-// const baseUrl = 'http://' + backend_ip + ':' + backend_port;
+
 const baseUrl = blog_asset_host;
 
 renderer.image = (href: string) => {
@@ -228,16 +226,14 @@ marked.use({ extensions: [inlineKatex, inlineKatexDisplay] });
 
 const markedMixin = {
   methods: {
-    md: function (input: string) {
+    markdown_renderer: function (input: string) {
       return marked.parse(input);
     },
   },
 };
 
 const app = createApp(App)
-  // .use(VueMathjax)
   .mixin(markedMixin)
-  // .mixin(katexMixin)
   .use(router)
   .use(Antd)
   .use(createMetaManager());

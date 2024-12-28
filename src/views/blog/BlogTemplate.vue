@@ -64,15 +64,12 @@
 // import { useMeta } from 'vue-meta';
 import router from "../../router/index";
 import { blog_backend } from "@/utils/request";
-// import blog_asset from "@/utils/blog_request";
-// import { HomeOutlined } from "@ant-design/icons-vue";
 import authentication_hash_code from "@/utils/authentication";
 
 export default {
   name: "BlogTemplate",
 
   components: {
-    // HomeOutlined,
   },
 
   props: {
@@ -93,7 +90,7 @@ export default {
 
   computed: {
     markdownToHtml() {
-      var markdown_content = this.md(this.markdown);
+      var markdown_content = this.markdown_renderer(this.markdown);
       return markdown_content;
     },
   },

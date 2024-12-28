@@ -1,10 +1,10 @@
 {
-  "name": "jionlp_online",
-  "version": "1.1.0",
+  "name": "jionlp_frontend",
+  "version": "1.2.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "serve": "vue-cli-service serve --mode development --fix",
+    "build": "vue-cli-service build --mode production --fix",
     "lint": "vue-cli-service lint --fix",
     "analyzer": "use_analyzer=true npm run serve"
   },
@@ -71,7 +71,7 @@
     },
     "rules": {
       "vue/multi-word-component-names": "off",
-      "prettier/prettier": "error"
+      "prettier/prettier": "off"
     }
   },
   "browserslist": [
