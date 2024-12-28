@@ -4,14 +4,14 @@
       <a-popover placement="bottomLeft" title="" trigger="hover">
         <template #content>
           <p>
-            ● 您是本站的第<b> {{ guest_count }} </b>位访客。
+            ● 带着自由，奔向真理与梦想。
           </p>
         </template>
         <router-link id="default_content" to="/"
           ><img
             id="jionlp_logo"
             alt="jionlp_logo"
-            src="@/assets/others/jionlp_logo.png"
+            src="@/assets/jionlp_logo.png"
         /></router-link>
       </a-popover>
     </div>
@@ -21,21 +21,14 @@
         mode="horizontal"
         :style="{ lineHeight: '44px', backgroundColor: 'black' }"
       >
-        <a-menu-item key="nlp_online">
+        <a-menu-item key="0">
           <router-link id="nlp_online" to="/jionlp_online">NLP在线</router-link>
         </a-menu-item>
-        <a-menu-item key="nlp_product">
-          <router-link id="nlp_product" to="/product">NLP产品</router-link>
+        <a-menu-item v-for="item in blog_first_directory" :key="item.key">
+          <router-link :id="item.key" :to="'/blog' + item.path">
+            {{ item.label }}
+          </router-link>
         </a-menu-item>
-        <a-menu-item key="nlp_lectrue">
-          <router-link id="nlp_lecture" to="/lecture/lecture_home_page"
-            >NLP教程</router-link
-          >
-        </a-menu-item>
-        <a-menu-item key="contact_us">
-          <router-link id="contact_us" to="/contact_us">联系我们</router-link>
-        </a-menu-item>
-        <!--<a-menu-item key="3">nav 3</a-menu-item-->
       </a-menu>
     </div>
     <div class="links" style="flex: 1; display: inline-block">
@@ -43,14 +36,14 @@
       <a href="https://github.com/dongrixinyu/JioNLP" target="_blank">
         <img
           class="link-icon-1"
-          src="@/assets/others/github_logo.jpg"
+          src="@/assets/github_logo.jpg"
           alt="Github"
         />
       </a>
       <a href="https://pypi.org/project/jionlp/" target="_blank">
         <img
           class="link-icon-2"
-          src="https://pypi.org/static/images/logo-small.95de8436.svg"
+          src="https://pypi.org/static/images/logo-small.8998e9d1.svg"
           alt="Pypi"
         />
       </a>
@@ -61,7 +54,15 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 // import { MenuOutlined } from "@ant-design/icons-vue";
-import { stat_instance } from "@/utils/request";
+
+import { blog_backend } from "@/utils/request";
+import authentication_hash_code from "@/utils/authentication";
+
+type DirectoryItem = {
+  key: string;
+  label: string; // 确保label是一个具体的类型，如string
+  path: string;
+};
 
 @Options({
   components: {
@@ -73,23 +74,76 @@ class PageHeader extends Vue {
   opened_horizontal_keys = [
     "nlp_online",
     "nlp_product",
-    "nlp_lecture",
+    "nlp_blog",
     "contact_us",
   ];
 
+  blog_first_index = [];
+  blog_first_directory: DirectoryItem[] = [];
+
   created() {
-    stat_instance({
-      url: "/stat_api/frontend_page_statistics",
-      data: {
-        page_name: "home_page",
-      },
-    })
-      .then((response) => {
-        this.guest_count = response.data.detail;
+    let { random_int, hash_code } = authentication_hash_code("");
+    let attemptCount = 0; // 初始化尝试次数计数器
+    const MAX_ATTEMPTS = 3; // 设置最大尝试次数
+
+    const attemptRequest = () => {
+      if (attemptCount >= MAX_ATTEMPTS) {
+        console.log("[PageHeader] Maximum attempts reached.");
+        return; // 如果已达到最大尝试次数，则不再继续重试
+      };
+
+      blog_backend({
+        url: "/blog_api/get_1st_directory",
+        data: {
+          random_num: random_int,
+          hash_code: hash_code,
+        },
       })
-      .catch(() => {
-        this.guest_count = 0;
-      });
+        .then((response) => {
+          if (response.data.is_ok) {
+            this.blog_first_index = response.data.detail;
+            // this.blog_first_directory = [];
+            this.$nextTick(() => {
+              // execute after the DOM is updated
+              console.log(
+                "[PageHeader] blog_first_index: ",
+                this.blog_first_index,
+              );
+              if (typeof this.blog_first_index === 'object'){
+                this.blog_first_directory = Object.keys(this.blog_first_index).map(
+                  (category, index) => ({
+                    label: category,
+                    key: (index + 1).toString(),
+                    path: `/${category}/${
+                      this.blog_first_index[
+                        category as keyof typeof this.blog_first_index
+                      ]
+                    }`,
+                  })
+                );
+              }
+              console.log(
+                "[PageHeader] blog_first_directory: ",
+                this.blog_first_directory
+              );
+            });
+          } else {
+            attemptCount++; // 增加尝试次数
+            console.log(`[PageHeader] Retrying... Attempt ${attemptCount + 1}`);
+            attemptRequest();
+          }
+        })
+        .catch(() => {
+          console.log(
+            "[PageHeader] Failed to request /blog_api/get_1st_directory"
+          );
+          attemptCount++; // 增加尝试次数
+          console.log(`[PageHeader] Retrying... Attempt ${attemptCount + 1}`);
+          attemptRequest();
+        });
+    };
+
+    attemptRequest();
   }
 }
 
@@ -118,6 +172,14 @@ export default PageHeader;
   margin-top: 0px;
 }
 
+.ant-menu {
+  font-size: 15px;
+}
+
+.ant-menu-overflow-item.ant-menu-item.ant-menu-item-only-child {
+  padding-left: 20px !important;
+}
+
 @media screen and (min-width: 800px) {
   .logo {
     position: fixed;
@@ -140,7 +202,7 @@ export default PageHeader;
   #horizontal_navigator {
     position: fixed;
     margin-left: 210px;
-    width: 381px;
+    width: 581px;
     height: 44px;
   }
 }
@@ -169,7 +231,10 @@ export default PageHeader;
 
 @media screen and (max-width: 801px) {
   #horizontal_navigator {
-    display: none;
+    position: fixed;
+    margin-left: 220px;
+    width: 391px;
+    height: 44px;
   }
 }
 

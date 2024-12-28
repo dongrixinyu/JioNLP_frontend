@@ -125,13 +125,15 @@ renderer.strong = (text: string) => {
   const prob: number = Math.random();
 
   if (prob > 0.85) {
-    return `<strong style="color: #ff0000">${text}</strong>`;
+    return `<strong style="color: #ff0000">${text}</strong>`;  // red
   } else if (prob > 0.75) {
-    return `<strong style="color: #eeaa00">${text}</strong>`;
+    return `<strong style="color: #eeaa00">${text}</strong>`;  // orange
   } else if (prob > 0.3) {
-    return `<strong style="color: #00b441">${text}</strong>`;
+    return `<strong style="color: #00b441">${text}</strong>`;  // green
+  } else if (prob > 0.15) {
+    return `<strong style="color: #92D050">${text}</strong>`;  // light green
   } else {
-    return `<strong style="color: #00b2f6">${text}</strong>`;
+    return `<strong style="color: #00b2f6">${text}</strong>`;  // blue
   }
 };
 

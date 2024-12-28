@@ -1,54 +1,48 @@
 <template>
-  <div id="right_column">
-    <a-col :span="8.5" style="margin-top: 43px">
+  <div id="advertisement">
+    <a-col :span="8.5" >
       <a-card hoverable style="width: 226px" type="inner">
         <template #cover>
           <img
-            class="advertisement"
+            class="ad-image"
             alt="Benice安睡饮，助您安稳入眠"
-            src="@/assets/advertisement/benice/benice_sleeping_beverage.jpg"
+            src="@/assets/advertisement/benice_sleeping_beverage.jpg"
           />
         </template>
         <a-card-meta
           title="【Benice六黑固元饮】"
-          style="{font-weight: bold, text-align: center,height: 20px}"
+          style="font-weight: bold; font-size: 14px; text-align: center; height: 20px; color: #444444"
         >
         </a-card-meta>
       </a-card>
     </a-col>
+
   </div>
 </template>
 
 <script>
 export default {
-  name: "BeniceSleepingBeverage",
+  name: "Advertisement",
   props: {},
   components: {},
+
 };
 </script>
 
 <style lang="less" scoped>
-.advertisement {
+.ad-image {
   font-weight: bold;
   width: 200px;
   height: 350px;
-  margin: 10px auto;
+  margin: 15px auto;
+  margin-bottom: 0px;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
 }
 
-#right_column {
-  // background-color: #ececec;
-  padding: 10px;
-  padding-left: 0;
-  position: relative;
-}
-
-@media screen and (max-width: 800px) {
-  #right_column {
-    display: none;
-  }
+#advertisement {
+    margin-bottom: 15px;
 }
 </style>

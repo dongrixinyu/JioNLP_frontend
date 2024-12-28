@@ -2,7 +2,7 @@
   <div>
     <Notification />
     <a-layout-footer style="text-align: center">
-      <p><b>JioNLP 源站</b> ©2021 Created by 冬日新雨</p>
+      <p><b>JioNLP </b> ©2021 Created by 山追言成</p>
       <a href="https://beian.miit.gov.cn" target="_blank" rel="noopener">
         <b>备案号：蜀ICP备2022016557号&emsp;</b>
       </a>
@@ -19,10 +19,10 @@
 
 <script>
 import { defineComponent } from "vue";
-import Notification from "@/views/Notification.vue";
+// import Notification from "@/views/Notification.vue";
 
 export default defineComponent({
-  components: { Notification },
+  // components: { Notification },
 });
 </script>
 

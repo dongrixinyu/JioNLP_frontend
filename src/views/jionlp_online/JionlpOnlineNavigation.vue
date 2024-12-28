@@ -136,6 +136,7 @@ export default defineComponent({
         state.preOpenKeys = oldVal;
       }
     );
+
     onMounted(() => {
       document.addEventListener("click", (event) => {
         const userClick = document.getElementById("navigation-button");

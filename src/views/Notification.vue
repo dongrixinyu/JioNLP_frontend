@@ -17,7 +17,7 @@
       <h5>&emsp;</h5>
       <img
         class="qr_code_for_gh"
-        src="@/assets/others/qrcode_for_gh.jpg"
+        src="@/assets/WeChat_Public_Accounts_qr_code.jpg"
         alt="Github"
       />
       <h5>公众号：JioNLP</h5>

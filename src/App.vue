@@ -3,19 +3,16 @@
     <a-layout>
       <metainfo>
         <template v-slot:title="{ content }">{{
-          content ? `${content} | JioNLP源站` : `SITE_NAME`
+          content ? `${content} | JioNLP` : `JioNLP`
         }}</template>
       </metainfo>
-      <PageHeader />
-      <a-layout id="page-content">
+      <page-header />
+      <a-layout id="page-content" style="flex-direction: row">
         <router-view> </router-view>
+        <page-right />
       </a-layout>
-      <!-- <a-layout>
-        <TuiJuheFront />
-        <Shampoo />
-      </a-layout> -->
       <a-layout>
-        <PageFooter />
+        <page-footer />
       </a-layout>
     </a-layout>
   </div>
@@ -24,18 +21,16 @@
 <script>
 // import Navigation from "@/components/Navigation.vue";
 import PageHeader from "@/views/PageHeader.vue";
-// import Shampoo from "@/advertisements/Shampoo.vue";
-// import TuiJuheFront from "@/advertisements/TuiJuheFront.vue";
 import PageFooter from "@/views/PageFooter.vue";
+import PageRight from "@/views/PageRight.vue";
 import { useMeta } from "vue-meta";
 
 export default {
   name: "App",
   components: {
     PageHeader,
-    // Shampoo,
-    // TuiJuheFront,
     PageFooter,
+    PageRight,
   },
   setup() {
     useMeta({

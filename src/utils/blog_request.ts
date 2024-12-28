@@ -7,7 +7,7 @@ const blog_asset_host = config.blog_asset_host;
 const blog_asset = axios.create({
   baseURL: blog_asset_host,
   method: "GET",
-  timeout: 3000,
+  timeout: 5000,
   headers: {
     // 'Origin': 'https://' + blog_asset_ip,
     "Content-Type": "text/markdown",

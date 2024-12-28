@@ -1,23 +1,19 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import HomePageBase from "@/views/HomePageBase.vue";
+import PageBase from "@/views/PageBase.vue";
 import JionlpOnlineBase from "@/views/jionlp_online/JionlpOnlineBase.vue";
-import LecturesBase from "@/views/lecture/LectureBase.vue";
+import BlogBase from "@/views/blog/BlogBase.vue";
+import EditBlogBase from "@/views/editblog/EditBlogBase.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "HomePage",
-    component: HomePageBase, // () => import('@/views/HomePageBase.vue'),
+    component: PageBase, // () => import('@/views/HomePageBase.vue'),
     children: [
       {
         path: "",
         name: "HomePageContent",
         component: () => import("@/views/HomePageContent.vue"),
-      },
-      {
-        path: "contact_us",
-        name: "ContactUs",
-        component: () => import("@/components/others/ContactUs.vue"),
       },
     ],
   },
@@ -33,17 +29,6 @@ const routes: Array<RouteRecordRaw> = [
         component: () =>
           import("@/views/jionlp_online/JionlpOnlineDefaultContent.vue"),
       },
-      // {
-      //   path: "extract_keyphrase",
-      //   name: "ExtractKeyphrase",
-      //   component: () =>
-      //     import("@/components/jionlp_online/ExtractKeyphrase.vue"),
-      // },
-      // {
-      //   path: "cws_pos",
-      //   name: "CwsPos",
-      //   component: () => import("@/components/jionlp_online/CwsPos.vue"),
-      // },
       {
         path: "parse_time",
         name: "ParseTime",
@@ -91,22 +76,15 @@ const routes: Array<RouteRecordRaw> = [
   },
 
   {
-    path: "/product",
-    name: "Product",
-    component: () => import("@/advertisements/TuiJuhe.vue"),
-    children: [
-      {
-        path: "tui_juhe",
-        name: "TuiJuhe",
-        component: () => import("@/advertisements/TuiJuhe.vue"),
-      },
-    ],
+    path: "/blog/:first_directory/:blog_id",
+    name: "Blog",
+    component: BlogBase,
   },
 
   {
-    path: "/lecture/:lecture_name",
-    name: "Lecture",
-    component: LecturesBase,
+    path: "/editblog/:blog_id",
+    name: "EditBlog",
+    component: EditBlogBase,
   },
 ];
 

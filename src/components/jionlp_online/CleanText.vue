@@ -1,5 +1,5 @@
 <template>
-  <a-layout class="variable_content" style="padding: 0 24px 24px">
+  <a-layout class="variable_content" style="padding: 0 24px 24px; width: 700px">
     <a-breadcrumb style="margin: 16px 0" :routes="$router">
       <a-breadcrumb-item>
         <router-link to="/">
@@ -42,7 +42,7 @@
       </div>
       <textarea
         v-model="text"
-        style="display: inline-block; margin-left: auto; margin-right: auto, width: 50%;"
+        style="display: inline-block; margin-left: auto; margin-right: auto; width: 100%;"
       />
       <a-button
         style="
@@ -63,7 +63,6 @@
             bordered
             layout="vertical"
             title=""
-            :size="size"
             :column="{}"
           >
             <a-descriptions-item label="" span="1" style="width: 105px"
@@ -94,7 +93,7 @@ import { Options, setup, Vue } from "vue-class-component";
 import { CaretRightOutlined, HomeOutlined } from "@ant-design/icons-vue";
 import { useMeta } from 'vue-meta';
 import router from "@/router/index";
-import { jio_instance } from "@/utils/request";
+import { jio_backend } from "@/utils/request";
 import jio_asset from "@/utils/asset_request";
 import authentication_hash_code from "@/utils/authentication";
 
@@ -129,7 +128,7 @@ class CleanText extends Vue {
   }
   send() {
     let { random_int, hash_code } = authentication_hash_code(this.text);
-    jio_instance({
+    jio_backend({
       url: "/jio_api/clean_text",
       data: {
         text: this.text,
