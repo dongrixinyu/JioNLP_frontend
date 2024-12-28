@@ -19,7 +19,7 @@
             }}
           </p>
         </div>
-        <div v-html="markdownToHtml"></div>
+        <div v-html="markdown2Html()"></div>
 
       </a-layout-content>
     </a-layout>
@@ -36,11 +36,11 @@ export default defineComponent({
   components: {
   },
 
-  computed: {
-    markdownToHtml() {
-      var markdown_content = this.md(this.markdown);
+  methods: {
+    markdown2Html() {
+      let markdown_content = this.markdown_renderer(this.markdown);
       return markdown_content;
-    },
+    }
   },
 
   data() {

@@ -44,7 +44,7 @@ module.exports = defineConfig({
               ),
               threshold: 10240,
               minRatio: 0.8,
-              deleteOriginalAssets: true // 删除源文件
+              deleteOriginalAssets: false // 删除源文件
             }),
             new webpack.optimize.LimitChunkCountPlugin({
               maxChunks: 5,

@@ -59,11 +59,6 @@ export default {
     blog_id: String, // blog_id
   },
 
-  // setup() {
-
-  //   return {blog_list_data};
-  // },
-
   data() {
     console.log("[HomePageContent][data]");
     return {
@@ -72,15 +67,12 @@ export default {
       blog_list_data: [],
     };
   },
-  
-  computed: {
+
+  methods: {
     markdownToHtml(blog_content) {
       var markdown_content = this.markdown_renderer(blog_content);
       return markdown_content;
     },
-  },
-
-  methods: {
 
     getColor() {
       const prob = Math.random();
