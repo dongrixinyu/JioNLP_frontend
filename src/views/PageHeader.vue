@@ -4,7 +4,7 @@
       <a-popover placement="bottomLeft" title="" trigger="hover">
         <template #content>
           <p>
-            ● 带着自由，奔向真理与梦想。
+            ● 跨越山海，努力奔赴。
           </p>
         </template>
         <router-link id="default_content" to="/"
@@ -24,7 +24,7 @@
         <a-menu-item key="0">
           <router-link id="nlp_online" to="/jionlp_online">NLP在线</router-link>
         </a-menu-item>
-        <a-menu-item v-for="item in blog_first_directory" :key="item.key">
+        <a-menu-item style="padding-left: 20px !important;" v-for="item in blog_first_directory" :key="item.key">
           <router-link :id="item.key" :to="'/blog' + item.path">
             {{ item.label }}
           </router-link>
@@ -174,10 +174,6 @@ export default PageHeader;
 
 .ant-menu {
   font-size: 15px;
-}
-
-.ant-menu-overflow-item.ant-menu-item.ant-menu-item-only-child {
-  padding-left: 20px !important;
 }
 
 @media screen and (min-width: 800px) {

@@ -8,6 +8,7 @@ module.exports = {
   frontend_ip: "182.92.160.94",
   frontend_port: 80,
   // blog_asset_host: 'https://jionlp-online.oss-cn-hangzhou.aliyuncs.com',
-  blog_asset_host: "http://182.92.160.94:16666",
+  // blog_asset_host: "http://182.92.160.94:16666",
+  blog_asset_host: "https://www.jionlp.com",
   // port: 8080
 };

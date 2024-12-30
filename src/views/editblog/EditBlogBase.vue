@@ -22,6 +22,7 @@
 <script>
 import { ref } from "vue";
 import router from "@/router/index";
+import { Md5 } from "ts-md5/dist/md5";
 
 import EditBlogNavigation from "@/views/editblog/EditBlogNavigation.vue";
 import EditBlogTemplate from "@/views/editblog/EditBlogTemplate.vue";
@@ -71,9 +72,10 @@ export default {
 
   methods: {
     getValue() {
-      if (this.password === "Dongrixinyu#1989"){
+      const hash_code = Md5.hashStr(this.password).slice(0, 8);
+      console.log("[EditBlogBase][getValue]: ", hash_code);
+      if (hash_code === "3f1cdbb2"){
         alert(`Your password is: ${this.password}`); // 显示密码
-
         this.isShow = false;
       } else {
         alert(`Your password is wrong.`); // 显示密码

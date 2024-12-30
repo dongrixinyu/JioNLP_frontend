@@ -32,7 +32,10 @@
               v-for="(chinese_name, j) in sub_content"
               :key="i + '-' + j"
             >
-              <router-link :to="'/blog/' + chinese_name['directory_1'] + '/' + chinese_name['blog_id']">{{
+              <router-link 
+                class="navigation-link" 
+                :title="chinese_name['blog_title']"
+                :to="'/blog/' + chinese_name['directory_1'] + '/' + chinese_name['blog_id']">{{
                 chinese_name['blog_title']
               }}</router-link>
             </a-menu-item>
@@ -286,5 +289,16 @@ export default defineComponent({
   #navigation-button {
     display: none;
   }
+}
+
+.navigation-link {
+  position: relative;
+  // display: inline-block;
+}
+
+.navigation-link:hover::after {
+  opacity: 1;
+  background-color: #ffffe0; /* 黄白色背景 */
+  font-size: 12px;
 }
 </style>

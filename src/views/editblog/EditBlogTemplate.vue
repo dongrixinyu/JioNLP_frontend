@@ -88,6 +88,29 @@
                 style="display: inline-block; margin-left: auto; margin-right: auto;"
               />
             </a-form-item>
+
+            <a-form-item label="上传图片">
+              <a-upload
+                class="upload-list-inline"
+                name="image_data"
+                :multiple="true"
+                :action="uploadAction"
+                list-type="picture"
+                :headers="this.headers"
+                :data="{'blog_id': conditionalBlogId,
+                        'hash_code': this.hash_code,
+                        'random_num': this.random_int}"
+                v-model:file-list="this.fileList"
+                :beforeUpload="beforeUpload"
+                @change="handleChange"
+                :disabled="disabled">
+                  <a-button>
+                    <upload-outlined></upload-outlined>
+                    upload >
+                  </a-button>
+
+              </a-upload>
+            </a-form-item>
             <a-form-item label="已有图片">
 
               <a-card
@@ -101,28 +124,6 @@
                   <template #description>![]({{ image_path }})</template>
                 </a-card-meta>
               </a-card>
-            </a-form-item>
-            <a-form-item label="上传图片">
-              <a-upload
-                class="upload-list-inline"
-                name="image_data"
-                :multiple="true"
-                :action="uploadAction"
-                list-type="picture"
-                :headers="this.headers"
-                :data="{'blog_id': this.blog_id,
-                        'hash_code': this.hash_code,
-                        'random_num': this.random_int}"
-                v-model:file-list="this.fileList"
-                :beforeUpload="beforeUpload"
-                @change="handleChange"
-                :disabled="disabled">
-                  <a-button>
-                    <upload-outlined></upload-outlined>
-                    upload >
-                  </a-button>
-
-              </a-upload>
             </a-form-item>
           </a-form>
           <a-form-item style="display: flex; align-items: left;">
@@ -268,26 +269,39 @@ export default {
       delete_info: "",  // 提交信息
 
       uploadAction: config.blog_asset_host + "/blog_api/insert_image",  //图片上传地址
-      imgErver: config.blog_asset_host + '/sys/common/view',  //图片预览地址
       isCreatFile: true,  //是否创建文件占位dom
       headers: {},
       fileList: [],
       blog_image_path: [],
-      previewSrc: '',
       previewVisible: false,
       urlDownload: config.blog_asset_host
-
-      // componentDisabled = ref(true),
-      // radioValue = ref('apple'),
 
     };
   },
 
   computed: {
     markdownToHtml() {
-      var markdown_content = this.md(this.blog_markdown);
+      var markdown_content = this.markdown_renderer(this.blog_markdown);
       return markdown_content;
     },
+
+    conditionalBlogId() {
+      if (this.blog_id === "newblog") {
+        // 确保 this.blog_established_time 是一个有效的字符串
+        if (this.blog_established_time && this.blog_established_time.length > 10) {
+          return (
+            this.blog_established_time.slice(0, 4) +
+            this.blog_established_time.slice(5, 7) +
+            this.blog_established_time.slice(8, 10)
+          );
+        }
+        // 如果 this.blog_established_time 不是一个有效的字符串，可以返回一个默认值或者空字符串
+        return '';
+      }
+      // 如果 this.blog_id 不等于 "newblog"，就返回 this.blog_id 本身
+      return this.blog_id;
+    }
+
   },
 
   // mounted() {
@@ -312,10 +326,12 @@ export default {
             return;
           } else {
             console.log('[EditBlogTemplate][get_blog_image_path] Failed');
+            this.blog_image_path = [];
           }
         })
         .catch(() => {
           console.log('[EditBlogTemplate][get_blog_image_path] Failed');
+          this.blog_image_path = [];
         });
     },
 
@@ -328,10 +344,10 @@ export default {
         return;
         // update-end-,Jupload组件初始化bug
       }
-      let fileList = [];
+      this.fileList = [];
       let arr = paths.split(",")
       for(var a = 0; a < arr.length; a++){
-        fileList.push({
+        this.fileList.push({
           uid: uidGenerator(),
           name: getFileName(arr[a]),
           status: 'done',
@@ -342,7 +358,6 @@ export default {
           }
         })
       }
-      this.fileList = fileList
     },
 
     handlePathChange () {
@@ -398,9 +413,18 @@ export default {
         if (info.file.response.is_ok) {
           fileList = fileList.map((file) => {
             if (file.response) {
-              file.url = this.urlDownload + '/blog_image/' + this.blog_id + '/' + file.response.detail.image_name;
+              console.log("[EditBlogNavigation][hancleChange] : ", file.response);
+
+              if (this.blog_id === "newblog") {
+                console.log("[EditBlogNavigation][hancleChange] newblog: ", this.blog_established_time);
+                let tmp_blog_id = this.blog_established_time.slice(0, 4) + this.blog_established_time.slice(5, 7) + this.blog_established_time.slice(8, 10);
+                file.url = this.urlDownload + '/blog_image/' + tmp_blog_id + '/' + file.response.detail.image_name;
+              } else {
+                file.url = this.urlDownload + '/blog_image/' + this.blog_id + '/' + file.response.detail.image_name;
+              }
+
               // file.name = file.response.detail.image_name;
-              file.name = file.url;
+              file.name = "![](" + file.url + ")";
             }
             return file;
           });
@@ -484,6 +508,8 @@ export default {
         this.blog_established_time = "";
         this.blog_edited_time = "";
         this.blog_visitor_count = 0;
+        this.blog_image_path = [];
+        this.fileList = [];
 
         this.blog_markdown = "### loading ...";
       } else {
@@ -684,7 +710,10 @@ export default {
 
     if (this.blog_id === "newblog") {
       console.log("[EditBlogTemplate][created] new blog.")
+      this.fileList = [];
+      this.blog_image_path = [];
     } else {
+      this.fileList = [];
       this.fetch_data();
       this.get_blog_image_path();
     }
@@ -693,7 +722,10 @@ export default {
   updated() {
     if (this.blog_id === "newblog") {
       console.log("[EditBlogTemplate][updated] new blog.")
+      this.fileList = [];
+      this.blog_image_path = [];
     } else {
+      this.fileList = [];
       this.fetch_data();
       this.get_blog_image_path();
     }
@@ -731,7 +763,7 @@ textarea {
 
 .upload-list-inline :deep(.ant-upload-list-item) {
   float: left;
-  width: 400px;
+  width: 550px;
   margin-right: 8px;
 }
 

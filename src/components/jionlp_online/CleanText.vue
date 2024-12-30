@@ -94,7 +94,6 @@ import { CaretRightOutlined, HomeOutlined } from "@ant-design/icons-vue";
 import { useMeta } from 'vue-meta';
 import router from "@/router/index";
 import { jio_backend } from "@/utils/request";
-import jio_asset from "@/utils/asset_request";
 import authentication_hash_code from "@/utils/authentication";
 
 let text_blob: any = new Blob();
@@ -119,13 +118,14 @@ class CleanText extends Vue {
   meta = setup(() => useMeta({ title: '清洗文本 | 在线测试' }));
 
   mounted() {
-    jio_asset({
+    jio_backend({
       url: "/clean_text_sample.txt",
     }).then((response) => {
       this.text = response.data;
     });
     // console.log("CleanText mounted!");
   }
+  
   send() {
     let { random_int, hash_code } = authentication_hash_code(this.text);
     jio_backend({
