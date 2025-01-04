@@ -203,7 +203,7 @@ export default {
     window.addEventListener('resize', this.updateImageStyle);
   },
 
-  beforeDestroy() {
+  beforeUnmount() {
     // 组件销毁前移除事件监听器
     window.removeEventListener('resize', this.updateImageStyle);
   },

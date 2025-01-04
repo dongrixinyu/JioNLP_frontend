@@ -40,10 +40,11 @@ renderer.image = (href: string) => {
   }
 
 
-  if (full_url.search("http") != -1) {
-    full_url = full_url;
-  } else {
+  if (!full_url.startsWith("http")) {
+    // 使用URL对象来构建完整的URL，这可以自动处理相对URL的情况
     full_url = baseUrl + href;
+  } else {
+    // 如果full_url已经是一个完整的URL，不需要再次赋值
   }
 
   if (image_style === "") {
