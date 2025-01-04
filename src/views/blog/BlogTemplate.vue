@@ -4,7 +4,7 @@
       <a-layout-content
         :style="{
           background: '#fff',
-          padding: '20px',
+          padding: '30px',
           margin: 0,
           width: '100%',
           minHeight: '280px',
@@ -22,7 +22,7 @@
 
           <div v-html="markdownToHtml"></div>
 
-          <hr>
+          <hr style="margin-top:50px; margin-bottom:30px;">
           <div v-if="this.visitor_count > 0">
             <div class="flex-postscript">
               <p class="bold-text">转载到请包括本文地址：</p>
@@ -198,10 +198,35 @@ export default {
     attemptRequest();
   },
 
+  mounted() {
+    this.updateImageStyle();
+    window.addEventListener('resize', this.updateImageStyle);
+  },
+
+  beforeDestroy() {
+    // 组件销毁前移除事件监听器
+    window.removeEventListener('resize', this.updateImageStyle);
+  },
+
   methods: {
     change_qr_code_shown () {
       this.show_qr_code = !this.show_qr_code;
-    }
+    },
+
+    updateImageStyle() {
+      // 若屏宽小于 500，则图像都按最大显示，即 90%
+      if (window.innerWidth <= 500) {
+        const images = document.getElementsByClassName('auto-resize');
+        console.log("[BlogTemplate][updateImageStyle] ", images);
+        if (images.length > 0) {
+          for (let i = 0; i < images.length; i++) {
+            const img = images[i];
+            img.style.width = '90%';
+          }
+        }
+      }
+    },
+
   }
 };
 </script>
@@ -217,6 +242,28 @@ export default {
     margin-left: 0px;
     min-width: 98vw;
   }
+}
+
+@media screen and (max-width: 500px) {
+  .width-60 {
+    width: 90%;
+    height: auto;
+  }
+
+  .width-70 {
+    width: 90%;
+    height: auto;
+  }
+}
+
+.width-60 {
+  width: 60%;
+  height: auto;
+}
+
+.width-70 {
+  width: 70%;
+  height: auto;
 }
 
 h1 {

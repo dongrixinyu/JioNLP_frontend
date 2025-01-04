@@ -7,9 +7,11 @@
     </h4>
     <div class="login-content">
       <input type="password" v-model="this.password"
-        id="passwordInput" placeholder="Enter your password">
-      <button @click="this.getValue">Get Password</button>
+        id="passwordInput" placeholder="输入口令">
+      <button style="color: #000000;" @click="this.getValue">提交</button>
     </div>
+  </div>
+  <div v-if="this.isShow == true" class="placeholder">
   </div>
   <div v-if="this.isShow == false">
     <a-layout>
@@ -86,6 +88,11 @@ export default {
 </script>
 
 <style>
+.placeholder {
+  font-size: 24px;
+  padding: 120px calc(49vw - 127px); /* 让占位符撑满容器宽度 */
+}
+
 #login-wrapper {
   position: fixed;
   bottom: auto;

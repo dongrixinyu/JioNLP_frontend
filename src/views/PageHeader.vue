@@ -21,7 +21,7 @@
         mode="horizontal"
         :style="{ lineHeight: '44px', backgroundColor: 'black' }"
       >
-        <a-menu-item key="0">
+        <a-menu-item style="padding-left: 20px !important;" key="0">
           <router-link id="nlp_online" to="/jionlp_online">NLP在线</router-link>
         </a-menu-item>
         <a-menu-item style="padding-left: 20px !important;" v-for="item in blog_first_directory" :key="item.key">
@@ -197,7 +197,7 @@ export default PageHeader;
 @media screen and (min-width: 800px) {
   #horizontal_navigator {
     position: fixed;
-    margin-left: 210px;
+    margin-left: 180px;
     width: 581px;
     height: 44px;
   }

@@ -18,19 +18,50 @@ const renderer = new marked.Renderer();
 const baseUrl = blog_asset_host;
 
 renderer.image = (href: string) => {
+  // url 字符串自定义了一种 {class: "auto-resize", "width": 100%} 这种参数配置方法
+  // 类似于这种 { width: 60 %; height: auto }，但不允许有空格
+  // 需要解析一下
   let full_url: string;
-  if (href.search("http") != -1) {
+  let image_style: string;
+  const regex = /\{(.*)\}/;
+  const match = regex.exec(href);
+
+  console.log("[main.ts][renderer.image] ", href);
+
+  if (match && match[1]) {
+
+    image_style = match[1];
+    full_url = href.replace(regex, "");
+    console.log("[main.ts][renderer.image] image_style ", image_style);
+    console.log("[main.ts][renderer.image] full_url ", full_url);
+  } else {
+    image_style = "";
     full_url = href;
+  }
+
+
+  if (full_url.search("http") != -1) {
+    full_url = full_url;
   } else {
     full_url = baseUrl + href;
   }
 
-  return `
-        <p align="center">
-            <a alt="image">
-                <img src="${full_url}" style="width:90%">
-            </a>
-        </p>`;
+  if (image_style === "") {
+    return `
+      <p align="center">
+        <a alt="image">
+          <img src="${full_url}" class="auto-resize" style="width:90%;height:auto;">
+        </a>
+      </p>`;
+  } else {
+    return `
+      <p align="center">
+        <a alt="image">
+          <img src="${full_url}" class="auto-resize" style="${image_style}">
+        </a>
+      </p>`;
+  }
+
 };
 
 renderer.paragraph = (text: string) => {
@@ -47,28 +78,34 @@ renderer.paragraph = (text: string) => {
 
 renderer.code = (text: string) => {
   const text_list = text.split("\n");
+  console.log("[main.ts][code] text ", text);
+  console.log("[main.ts][code] text_list ", text_list);
   return `
-        <p><code style="
-                display: block;
-                background-color: #eaeaea;
-                font-size: 14px;
-                line-height: 25px;
-                border-radius: 6px;
-                width: 100%;
-                padding: 15px 20px 15px 20px;">
-            ${text_list.filter(Boolean).join("<br>")}
-        </code></p>`;
+    <p>
+      <code style="
+        white-space: pre-wrap;
+        display: block;
+        background-color: #eaeaea;
+        font-size: 14px;
+        line-height: 25px;
+        border-radius: 6px;
+        width: 100%;
+        padding: 15px 20px 15px 20px;">${text_list.join("<br>")}
+      </code>
+    </p>`;
 };
 
 renderer.codespan = (text: string) => {
   return `
         <code style="
-                background-color: #eaeaea;
-                font-size: 16px;
-                line-height: 29px;
-                border-radius: 2px;
-                padding: 3px 5px 3px 5px;">
-            ${text}</code>`;
+          background-color: #eaeaea;
+          font-size: 16px;
+          line-height: 29px;
+          border-radius: 2px;
+          padding: 3px 5px 3px 5px;"
+        >
+          ${text}
+        </code>`;
 };
 
 renderer.blockquote = (text: string) => {
@@ -85,17 +122,92 @@ renderer.blockquote = (text: string) => {
                   .join("<br>")}</blockquote>`;
 };
 
+renderer.list = (text: string, ordered: boolean) => {
+  const type = ordered ? 'ol' : 'ul';
+  // 添加自定义属性，例如 class
+  return `
+  <${type} style="background-color: #dffff5;">
+    ${text}
+  </${type}>`;
+};
+
+renderer.listitem = (text: string) => {
+  return `
+    <li style="
+      display: list-item;
+      text-align: -webkit-match-parent;
+      unicode-bidi: isolate;
+      font-size: 16px;
+      margin-bottom: 1em;"
+    >
+      ${text}
+    </li>`;
+};
+
+renderer.table = (header: string, body: string) => {
+  return `
+    <table style="
+        border: 2px solid black;
+        border-collapse: collapse;
+        width: 100%;
+        margin-bottom: 20px;
+        text-align: center;">
+      <thead style="
+          background-color: #dffff5;">
+        ${header}
+      </thead>
+      <tbody>
+        ${body}
+      </tbody>
+    </table>`;
+};
+
+renderer.tablecell = (text: string, header: boolean) => {
+  const type = header ? 'th' : 'td';
+  // console.log("[main.ts][tablecell] type", type);
+  if (type === "td") {
+    return `
+      <${type} style="
+        border: 1px solid black;
+        font-weight: normal;
+        padding: 3px;"
+      >
+        ${text}
+      </${type}>`;
+  } else {
+    return `
+      <${type} style="
+        border: 1px solid black;
+        font-weight: normal;
+        padding: 5px;"
+      >
+        ${text}
+      </${type}>`;
+  }
+
+
+}
+
+renderer.tablerow = (text: string) => {
+  return `
+    <tr style="font-weight: bold !important;">
+      ${text}
+    </tr>`;
+}
+
 renderer.heading = (text: string, level: number) => {
   // console.log(text);
   const escapedText = text.toLowerCase();
   // console.log(escapedText);
   let font_size;
-  if (level == 2) {
-    font_size = 24;
+  if (level == 1) {
+    font_size = 25;
+  } else if (level == 2) {
+    font_size = 23;
   } else if (level == 3) {
     font_size = 21;
   } else if (level == 4) {
-    font_size = 18;
+    font_size = 19;
   } else if (level == 5) {
     font_size = 18;
   } else {
@@ -103,15 +215,16 @@ renderer.heading = (text: string, level: number) => {
   }
 
   return `
-        <h${level} style="font-size: ${font_size}px;
-                font-weight: bold;
-                margin-top: 30px;
-                border-bottom: 1px solid #eaecef;">
-            <a name="${escapedText}" class="header-anchor" href="#${escapedText}">
-                <span class="header-link"></span>
-            </a>
-            ${text}
-        </h${level}>`;
+    <h${level} style="font-size: ${font_size}px;
+        font-weight: bold;
+        margin-top: 30px;
+        border-bottom: 1px solid #eaecef;">
+      <a name="${escapedText}" class="header-anchor" href="#${escapedText}">
+        <span class="header-link">
+        </span>
+      </a>
+      ${text}
+    </h${level}>`;
 };
 
 renderer.strong = (text: string) => {
