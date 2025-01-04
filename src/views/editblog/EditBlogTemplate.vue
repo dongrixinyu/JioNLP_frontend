@@ -84,7 +84,7 @@
                 v-model="this.blog_text"
                 :rows="30"
                 :maxlength="40000"
-                placeholder="请写入 markdown 博客正文"
+                :placeholder="this.blog_placeholder"
                 style="display: inline-block; margin-left: auto; margin-right: auto;"
               />
             </a-form-item>
@@ -259,6 +259,7 @@ export default {
       blog_visitor_count: 0,
 
       blog_markdown: "### loading ...",
+      blog_placeholder: "输入 markdown 博客正文\n在编写图片时，可以编写\n![](https://www.jionlp.com/blog_image/xxx/xxx{width:60%;height:auto})\n来控制图片显示的大小，注意{}中的字符不能有空格存在",
 
       random_int: random_int,
       hash_code: hash_code,
