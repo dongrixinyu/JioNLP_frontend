@@ -52,7 +52,10 @@ export default {
 .friend-item {
   color: #444444;
   font-size: 14px;
+}
 
+.friend-item:hover {
+  color: #00B050;;
 }
 
 @media screen and (max-width: 800px) {

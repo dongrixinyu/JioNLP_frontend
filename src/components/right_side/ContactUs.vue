@@ -11,16 +11,22 @@
       />
     </div>
 
-    <p class="contact-us-description"><b>崔诚煜</b>、网名<b>山追言成/冬日新雨</b>，JioNLP、jiojio、ffio
+    <p class="contact-us-description">
+      <b>崔诚煜</b>、网名<b>山追言成/冬日新雨</b>，
+      <a class="contact-link" href="https://github.com/dongrixinyu/JioNLP">JioNLP</a>、
+      <a class="contact-link" href="https://github.com/dongrixinyu/jiojio">jiojio</a>、
+      <a class="contact-link" href="https://github.com/dongrixinyu/ffio">ffio</a>
 开源软件作者，喜欢【程序、AI、数学、机器人、小说、跳舞机、养花】，目前在成都</p>
-    <router-link to="/blog/杂文/20240101" class="contact-us-description">关于我的经历</router-link>
+    <p class="contact-us-description">
+      <a class="contact-link" href="/blog/杂文/20240101">关于我的经历</a>
+    </p>
     <p class="contact-us-description">
       <b>邮箱</b>：dongrixinyu.66@gmail.com<br>
       <b>微信</b>：shanzhuiyancheng<br>
       <b>B站</b>：<a class="contact-link" href="https://space.bilibili.com/248611999">山追言成</a><br>
       <b>知乎</b>：<a class="contact-link" href="https://www.zhihu.com/people/shan-zhui-yan-cheng-10">JioNLP</a><br>
       <b>公众号</b>：JioNLP<br>
-      
+
     </p>
     <div style="display: flex; justify-content: center; align-items: center;">
       <img src="@/assets/WeChat_Public_Accounts_qr_code.jpg" width="100" height="100" alt="公众号">
@@ -85,6 +91,7 @@ export default {
   padding-left: 18px;
   padding-top: 12px;
   color: #444444;
+  margin-bottom: 0.3em;
 }
 
 @media screen and (max-width: 800px) {

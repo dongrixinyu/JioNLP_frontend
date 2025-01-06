@@ -90,9 +90,13 @@ export default {
   margin-left: 20px;
 }
 
-.article-link {
+#latest-blog > ul > li > .article-link {
   color: #444444;
   font-size: 14px;
+}
+
+#latest-blog > ul > li > .article-link:hover {
+  color: #FF0000;
 }
 
 @media screen and (max-width: 800px) {

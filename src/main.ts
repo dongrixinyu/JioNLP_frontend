@@ -66,6 +66,9 @@ renderer.image = (href: string) => {
 };
 
 renderer.paragraph = (text: string) => {
+
+  console.log("[main.ts][renderer.paragraph] ", text);
+
   let space_text: string;
   if (text[0] != "　") {
     space_text = "　　" + text;
@@ -74,7 +77,9 @@ renderer.paragraph = (text: string) => {
   }
 
   return `
-        <p style="font-size: 16px; line-height: 29px;">${space_text}</p>`;
+    <p style="font-size: 16px; line-height: 29px;">
+      ${space_text}
+    </p>`;
 };
 
 renderer.code = (text: string) => {
@@ -185,8 +190,6 @@ renderer.tablecell = (text: string, header: boolean) => {
         ${text}
       </${type}>`;
   }
-
-
 }
 
 renderer.tablerow = (text: string) => {
