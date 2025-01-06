@@ -32,8 +32,8 @@
               v-for="(chinese_name, j) in sub_content"
               :key="i + '-' + j"
             >
-              <router-link 
-                class="navigation-link" 
+              <router-link
+                class="navigation-link"
                 :title="chinese_name['blog_title']"
                 :to="'/blog/' + chinese_name['directory_1'] + '/' + chinese_name['blog_id']">{{
                 chinese_name['blog_title']
@@ -233,20 +233,10 @@ export default defineComponent({
 
   },
 
-  // methods: {
-  //   updateDOM() {
-  //     this.componentKey += 1; // 更新key值，强制重新渲染
-  //   }
-  // },
-
   components: {
-    // PieChartOutlined,
     MailOutlined,
     MenuUnfoldOutlined,
     MenuFoldOutlined,
-    // DesktopOutlined,
-    // InboxOutlined,
-    // AppstoreOutlined,
   },
 });
 </script>

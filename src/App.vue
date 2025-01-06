@@ -7,13 +7,15 @@
         }}</template>
       </metainfo>
       <page-header />
-      <a-layout id="page-content" style="flex-direction: row">
-        <router-view> </router-view>
-        <page-right />
-      </a-layout>
-      <a-layout>
-        <page-footer />
-      </a-layout>
+      <div style="display: flex; flex-direction: column;">
+        <a-layout id="page-content" style="flex-direction: row">
+          <router-view> </router-view>
+          <page-right />
+        </a-layout>
+        <a-layout>
+          <page-footer />
+        </a-layout>
+      </div>
     </a-layout>
   </div>
 </template>

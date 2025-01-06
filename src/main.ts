@@ -67,7 +67,7 @@ renderer.image = (href: string) => {
 
 renderer.paragraph = (text: string) => {
 
-  console.log("[main.ts][renderer.paragraph] ", text);
+  // console.log("[main.ts][renderer.paragraph] ", text);
 
   let space_text: string;
   if (text[0] != "　") {
@@ -84,8 +84,8 @@ renderer.paragraph = (text: string) => {
 
 renderer.code = (text: string) => {
   const text_list = text.split("\n");
-  console.log("[main.ts][code] text ", text);
-  console.log("[main.ts][code] text_list ", text_list);
+  // console.log("[main.ts][code] text ", text);
+  // console.log("[main.ts][code] text_list ", text_list);
   return `
     <p>
       <code style="
