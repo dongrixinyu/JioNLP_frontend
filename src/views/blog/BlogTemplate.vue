@@ -25,8 +25,8 @@
           <hr style="margin-top:50px; margin-bottom:30px;">
           <div v-if="this.visitor_count > 0">
             <div class="flex-postscript">
-              <p class="bold-text">转载到请包括本文地址：</p>
-              <p class="italic-text">http://www.jionlp.com/{{ this.$route.params.first_directory }}/{{ this.blog_id }}</p>
+              <p class="bold-text">转载请附本文地址：</p>
+              <p class="italic-text">https://www.jionlp.com/{{ this.$route.params.first_directory }}/{{ this.blog_id }}</p>
             </div>
             <p class="bold-text">如果您觉得本文还不错，欢迎分享/打赏本文。打赏并非要从中获得收益，而是希望知道 JioNLP 获得了多少读者的真心关注。
               当然，如果你无视它，也不会影响你的阅读。再次表示欢迎和感谢！</p>
