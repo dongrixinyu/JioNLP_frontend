@@ -26,14 +26,14 @@ renderer.image = (href: string) => {
   const regex = /\{(.*)\}/;
   const match = regex.exec(href);
 
-  console.log("[main.ts][renderer.image] ", href);
+  // console.log("[main.ts][renderer.image] ", href);
 
   if (match && match[1]) {
 
     image_style = match[1];
     full_url = href.replace(regex, "");
-    console.log("[main.ts][renderer.image] image_style ", image_style);
-    console.log("[main.ts][renderer.image] full_url ", full_url);
+    // console.log("[main.ts][renderer.image] image_style ", image_style);
+    // console.log("[main.ts][renderer.image] full_url ", full_url);
   } else {
     image_style = "";
     full_url = href;
@@ -77,9 +77,7 @@ renderer.paragraph = (text: string) => {
   }
 
   return `
-    <p style="font-size: 16px; line-height: 29px;">
-      ${space_text}
-    </p>`;
+    <p style="font-size: 16px; line-height: 29px;">${space_text}</p>`;
 };
 
 renderer.code = (text: string) => {
@@ -96,8 +94,7 @@ renderer.code = (text: string) => {
         line-height: 25px;
         border-radius: 6px;
         width: 100%;
-        padding: 15px 20px 15px 20px;">${text_list.join("<br>")}
-      </code>
+        padding: 15px 20px 15px 20px;">${text_list.join("<br>")}</code>
     </p>`;
 };
 
@@ -109,9 +106,7 @@ renderer.codespan = (text: string) => {
           line-height: 29px;
           border-radius: 2px;
           padding: 3px 5px 3px 5px;"
-        >
-          ${text}
-        </code>`;
+        >${text}</code>`;
 };
 
 renderer.blockquote = (text: string) => {
@@ -132,9 +127,7 @@ renderer.list = (text: string, ordered: boolean) => {
   const type = ordered ? 'ol' : 'ul';
   // 添加自定义属性，例如 class
   return `
-  <${type} style="background-color: #dffff5;">
-    ${text}
-  </${type}>`;
+  <${type} style="background-color: #dffff5;">${text}</${type}>`;
 };
 
 renderer.listitem = (text: string) => {
@@ -145,9 +138,7 @@ renderer.listitem = (text: string) => {
       unicode-bidi: isolate;
       font-size: 16px;
       margin-bottom: 1em;"
-    >
-      ${text}
-    </li>`;
+    >${text}</li>`;
 };
 
 renderer.table = (header: string, body: string) => {
