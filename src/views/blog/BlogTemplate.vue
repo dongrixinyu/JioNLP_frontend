@@ -281,7 +281,7 @@ h1 {
 }
 
 .flex-postscript {
-  display: flex;
+  // display: flex;
   align-items: center;
 }
 
