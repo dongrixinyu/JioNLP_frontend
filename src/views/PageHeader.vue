@@ -4,7 +4,7 @@
       <a-popover placement="bottomLeft" title="" trigger="hover">
         <template #content>
           <p>
-            ● 跨越山海，努力奔赴。
+            ● 跨越山海，春暖花开。
           </p>
         </template>
         <router-link id="default_content" to="/"

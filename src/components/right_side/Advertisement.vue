@@ -1,30 +1,75 @@
 <template>
   <div id="advertisement">
-    <a-col :span="8.5" >
-      <a-card hoverable style="width: 226px" type="inner">
-        <template #cover>
-          <img
-            class="ad-image"
-            alt="Benice安睡饮，助您安稳入眠"
-            src="@/assets/advertisement/benice_sleeping_beverage.jpg"
-          />
-        </template>
-        <a-card-meta
-          title="【Benice六黑固元饮】"
-          style="font-weight: bold; font-size: 14px; text-align: center; height: 20px; color: #444444"
-        >
-        </a-card-meta>
-      </a-card>
-    </a-col>
+
+    <a :href="this.advertisement_url_link">
+      <img
+        class="ad-image"
+        alt=""
+        :src="this.advertisement_image_path"
+      />
+    </a>
 
   </div>
 </template>
 
 <script>
+import { blog_backend } from "@/utils/request";
+import authentication_hash_code from "@/utils/authentication";
+
 export default {
   name: "Advertisement",
   props: {},
   components: {},
+  
+  data() {
+    return {
+      advertisement_image_path: "",
+      advertisement_url_link: "",
+    };
+  },
+
+  created() {
+    let { random_int, hash_code } = authentication_hash_code("");
+    let attemptCount = 0; // 初始化尝试次数计数器
+    const MAX_ATTEMPTS = 3; // 设置最大尝试次数
+
+    console.log("[Advertisement][created]");
+    const attemptRequest = () => {
+      if (attemptCount >= MAX_ATTEMPTS) {
+        this.advertisement_image_path = "";
+
+        console.log("[Advertisement] Maximum attempts reached.");
+        return; // 如果已达到最大尝试次数，则不再继续重试
+      };
+
+      blog_backend({
+        url: "/trivials/get_advertisement",
+        data: {
+          random_num: random_int,
+          hash_code: hash_code,
+        }
+      })
+      .then((response) => {
+        if (response.data.is_ok) {
+          this.advertisement_image_path = response.data.detail["image_path"];
+          this.advertisement_url_link = response.data.detail["url_link"];
+          console.log("[Advertisement][created]", response.data.detail);
+
+        } else {
+          attemptCount++; // 增加尝试次数
+          console.log(`[Advertisement] Retrying... Attempt ${attemptCount + 1}`);
+          attemptRequest();
+        }
+      })
+      .catch(() => {
+        attemptCount++; // 增加尝试次数
+        console.log(`[Advertisement] Retrying... Attempt ${attemptCount + 1}`);
+        attemptRequest();
+      });
+    };
+
+    attemptRequest();
+  },
 
 };
 </script>
@@ -32,9 +77,8 @@ export default {
 <style lang="less" scoped>
 .ad-image {
   font-weight: bold;
-  width: 200px;
-  height: 350px;
-  margin: 15px auto;
+  width: 190px;
+  // margin: 15px auto;
   margin-bottom: 0px;
   display: flex;
   justify-content: center;
@@ -43,6 +87,8 @@ export default {
 }
 
 #advertisement {
-    margin-bottom: 15px;
+  margin-bottom: 15px;
+  padding: 12px 10px;
+  background-color: #FFFFFF;
 }
 </style>
