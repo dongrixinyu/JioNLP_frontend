@@ -664,7 +664,7 @@ export default {
       // effectiveEstablishedTime falls back to current time, so we must check
       // the picker directly — otherwise images get stored under today's date
       // even if the blog will be published under a different date.
-      let resolved_blog_id: string;
+      let resolved_blog_id;
       if (this.blog_id === 'newblog') {
         if (!this.blog_established_time_picker) {
           this.preprocess_status = { message: '请先选择发布日期，以便确定图片存储路径（博客 ID）。', type: 'warning' };
@@ -695,9 +695,9 @@ export default {
         const resp = response.data;
         if (resp.is_ok === true) {
           const detail = resp.detail;
-          const new_text: string = detail.text;
-          const replaced: number = (detail.processed_images || []).length;
-          const failed: number  = (detail.failed_images   || []).length;
+          const new_text = detail.text;
+          const replaced = (detail.processed_images || []).length;
+          const failed = (detail.failed_images   || []).length;
 
           // Write the processed markdown back into the textarea
           this.blog_text = new_text;
