@@ -56,21 +56,26 @@
               </a-radio-group>
             </a-form-item>
             <a-form-item v-if="this.blog_id === 'newblog'" label="发布日期">
-              <textarea
-                v-model="this.blog_established_time"
-                :rows="1"
-                style="display: inline-block; margin-left: auto; margin-right: auto;"
+              <a-date-picker
+                v-model:value="this.blog_established_time_picker"
+                show-time
+                format="YYYY-MM-DD HH:mm:ss"
+                value-format="YYYY-MM-DD HH:mm:ss"
+                placeholder="留空则使用当前时间"
+                style="width: 280px;"
               />
+              <span style="margin-left: 12px; font-size: 12px; color: #888;">
+                博客 ID：<b>{{ previewBlogId || '（选择日期后显示）' }}</b>
+              </span>
             </a-form-item>
             <a-form-item v-else label="发布日期">
               <p>{{ this.blog_established_time }}</p>
             </a-form-item>
             <a-form-item label="编辑日期">
-              <textarea
-                v-model="this.blog_edited_time"
-                :rows="1"
-                style="display: inline-block; margin-left: auto; margin-right: auto;"
-              />
+              <p style="margin: 0; color: #555;">
+                {{ this.blog_edited_time || '—' }}
+              </p>
+              <span style="font-size: 12px; color: #aaa;">提交时自动更新为当前时间</span>
             </a-form-item>
             <a-form-item label="访问人数">
               <textarea
@@ -88,6 +93,36 @@
                 style="display: inline-block; margin-left: auto; margin-right: auto;"
               />
             </a-form-item>
+
+            <!-- ── 图片预处理 ────────────────────────────────────────── -->
+            <a-form-item label="图片预处理">
+              <a-space direction="vertical" style="width: 100%;">
+                <a-space>
+                  <a-button
+                    type="default"
+                    :loading="preprocess_loading"
+                    :disabled="preprocess_loading"
+                    @click="preprocess_images"
+                  >
+                    <template #icon><FileImageOutlined /></template>
+                    预处理图片链接
+                  </a-button>
+                  <span style="font-size: 12px; color: #888;">
+                    将正文中的外链图片下载到服务器，并替换为站内链接；提交前请先点此按钮。
+                  </span>
+                </a-space>
+                <a-alert
+                  v-if="preprocess_status.message"
+                  :message="preprocess_status.message"
+                  :type="preprocess_status.type"
+                  show-icon
+                  closable
+                  @close="preprocess_status.message = ''"
+                  style="max-width: 700px;"
+                />
+              </a-space>
+            </a-form-item>
+            <!-- ─────────────────────────────────────────────────────── -->
 
             <a-form-item label="上传图片">
               <a-upload
@@ -173,6 +208,7 @@
 import router from "../../router/index";
 import { blog_backend } from "@/utils/request";
 // import { HomeOutlined } from "@ant-design/icons-vue";
+import { FileImageOutlined, CaretRightOutlined } from "@ant-design/icons-vue";
 import authentication_hash_code from "@/utils/authentication";
 
 const config = require("@/global_config");
@@ -211,6 +247,8 @@ export default {
     // HomeOutlined,
     // UploadOutlined,
     // PlusOutlined,
+    FileImageOutlined,
+    CaretRightOutlined,
   },
 
   props: {
@@ -255,8 +293,13 @@ export default {
       blog_directory_2: "",
       blog_text: "",
       blog_established_time: "",
+      blog_established_time_picker: null,  // bound to a-date-picker (null = not chosen)
       blog_edited_time: "",
       blog_visitor_count: 0,
+
+      // ── Image preprocessing state ──────────────────────────────────
+      preprocess_loading: false,
+      preprocess_status: { message: '', type: 'info' },  // type: success | error | info | warning
 
       blog_markdown: "### loading ...",
       blog_placeholder: "输入 markdown 博客正文\n在编写图片时，可以编写\n![](https://www.jionlp.com/blog_image/xxx/xxx{width:60%;height:auto})\n来控制图片显示的大小，注意{}中的字符不能有空格存在",
@@ -286,20 +329,29 @@ export default {
       return markdown_content;
     },
 
+    // The effective established time: picker value if chosen, else current time (resolved at submit)
+    effectiveEstablishedTime() {
+      if (this.blog_id === "newblog") {
+        return this.blog_established_time_picker || this.get_current_time();
+      }
+      return this.blog_established_time;
+    },
+
+    // Blog ID preview shown in the form (date string without dashes)
+    previewBlogId() {
+      const t = this.blog_established_time_picker;
+      if (!t || t.length < 10) return '';
+      return t.slice(0, 4) + t.slice(5, 7) + t.slice(8, 10);
+    },
+
     conditionalBlogId() {
       if (this.blog_id === "newblog") {
-        // 确保 this.blog_established_time 是一个有效的字符串
-        if (this.blog_established_time && this.blog_established_time.length > 10) {
-          return (
-            this.blog_established_time.slice(0, 4) +
-            this.blog_established_time.slice(5, 7) +
-            this.blog_established_time.slice(8, 10)
-          );
+        const t = this.effectiveEstablishedTime;
+        if (t && t.length >= 10) {
+          return t.slice(0, 4) + t.slice(5, 7) + t.slice(8, 10);
         }
-        // 如果 this.blog_established_time 不是一个有效的字符串，可以返回一个默认值或者空字符串
         return '';
       }
-      // 如果 this.blog_id 不等于 "newblog"，就返回 this.blog_id 本身
       return this.blog_id;
     }
 
@@ -417,8 +469,8 @@ export default {
               console.log("[EditBlogNavigation][hancleChange] : ", file.response);
 
               if (this.blog_id === "newblog") {
-                console.log("[EditBlogNavigation][hancleChange] newblog: ", this.blog_established_time);
-                let tmp_blog_id = this.blog_established_time.slice(0, 4) + this.blog_established_time.slice(5, 7) + this.blog_established_time.slice(8, 10);
+                const t = this.effectiveEstablishedTime;
+                let tmp_blog_id = t.slice(0, 4) + t.slice(5, 7) + t.slice(8, 10);
                 file.url = this.urlDownload + '/blog_image/' + tmp_blog_id + '/' + file.response.detail.image_name;
               } else {
                 file.url = this.urlDownload + '/blog_image/' + this.blog_id + '/' + file.response.detail.image_name;
@@ -507,6 +559,7 @@ export default {
         this.blog_directory_2 = "";
         this.blog_text = "";
         this.blog_established_time = "";
+        this.blog_established_time_picker = null;  // reset date picker
         this.blog_edited_time = "";
         this.blog_visitor_count = 0;
         this.blog_image_path = [];
@@ -593,19 +646,103 @@ export default {
       return formattedDate;
     },
 
+    // ── 图片预处理：下载外链图片并替换为站内链接 ──────────────────────────
+    async preprocess_images() {
+      if (!this.blog_text || !this.blog_text.trim()) {
+        this.preprocess_status = { message: '正文为空，请先填写博客正文。', type: 'warning' };
+        return;
+      }
+
+      // Check if there are any external image links at all
+      const imgPattern = /!\[.*?\]\((https?:\/\/(?!(?:www\.)?jionlp\.com)[^\s)]+)\)/g;
+      if (!imgPattern.test(this.blog_text)) {
+        this.preprocess_status = { message: '正文中未检测到需要处理的外链图片，无需预处理。', type: 'info' };
+        return;
+      }
+
+      // Resolve the blog_id to use for image storage
+      const resolved_blog_id = this.blog_id === 'newblog'
+        ? this.get_blog_id(this.effectiveEstablishedTime)
+        : this.blog_id;
+
+      if (!resolved_blog_id) {
+        this.preprocess_status = { message: '请先选择发布日期，以便确定图片存储路径。', type: 'warning' };
+        return;
+      }
+
+      this.preprocess_loading = true;
+      this.preprocess_status = { message: '正在处理图片，请稍候……', type: 'info' };
+
+      try {
+        let { random_int, hash_code } = authentication_hash_code(this.blog_text);
+
+        const response = await blog_backend({
+          url: '/blog_api/process_markdown_images',
+          data: {
+            random_num: random_int,
+            hash_code: hash_code,
+            text: this.blog_text,
+            blog_id: resolved_blog_id,
+          }
+        });
+
+        if (response.data.is_ok) {
+          const new_text = response.data.detail;
+          const old_text = this.blog_text;
+
+          // Count how many image links were replaced
+          const oldCount = (old_text.match(/!\[.*?\]\(https?:\/\/(?!(?:www\.)?jionlp\.com)/g) || []).length;
+          const newCount = (new_text.match(/!\[.*?\]\(https?:\/\/(?!(?:www\.)?jionlp\.com)/g) || []).length;
+          const replaced = oldCount - newCount;
+
+          this.blog_text = new_text;
+          this.preprocess_status = {
+            message: `预处理完成！共替换 ${replaced} 张图片链接为站内链接。`,
+            type: 'success'
+          };
+        } else {
+          this.preprocess_status = {
+            message: `预处理失败：${response.data.detail || '服务器返回错误'}`,
+            type: 'error'
+          };
+        }
+      } catch (err) {
+        this.preprocess_status = {
+          message: '预处理请求失败，请检查网络或后端服务是否正常。',
+          type: 'error'
+        };
+        console.error('[preprocess_images] error:', err);
+      } finally {
+        this.preprocess_loading = false;
+      }
+    },
+    // ──────────────────────────────────────────────────────────────────
+
     send_edited_blog() {
       let { random_int, hash_code } = authentication_hash_code("");
+
+      // Auto-resolve times at the moment of submission
+      const now = this.get_current_time();
+      const established_time = this.blog_id === "newblog"
+        ? (this.blog_established_time_picker || now)
+        : this.blog_established_time;
+      const edited_time = now;  // always auto-set to current time on every submit
+
+      // Update the displayed edited_time so the user sees it immediately
+      this.blog_edited_time = edited_time;
+
       if (this.blog_id === "newblog") {
+        const resolved_blog_id = this.get_blog_id(established_time);
 
         blog_backend({
           url: "/blog_api/insert_blog",
           data: {
             random_num: random_int,
             hash_code: hash_code,
-            blog_id: this.get_blog_id(this.blog_established_time),
-            frontend_page_name: this.get_blog_id(this.blog_established_time),
-            established_time: this.blog_established_time,
-            edited_time: this.blog_edited_time,
+            blog_id: resolved_blog_id,
+            frontend_page_name: resolved_blog_id,
+            established_time: established_time,
+            edited_time: edited_time,
             visitor_count: this.blog_visitor_count,
             blog_title: this.blog_title,
             blog_text: this.blog_text,
@@ -617,11 +754,10 @@ export default {
         .then((response) => {
           this.already_updated_flag = true;
           if (response.data.is_ok) {
-            this.update_info = "提交成功";
+            this.update_info = "提交成功（博客 ID：" + resolved_blog_id + "）";
             console.log("[EditBlogTemplate][insert_blog] success", response.data.detail);
           } else {
             if (response.data.detail === "duplicate primary key") {
-              // 重复提交
               this.update_info = "blog ID 重复提交";
               console.log("[EditBlogTemplate][insert_blog] failure", response.data.detail);
             } else {
@@ -645,7 +781,7 @@ export default {
             hash_code: hash_code,
             blog_id: this.blog_id,
             frontend_page_name: this.blog_id,
-            edited_time: this.blog_edited_time,
+            edited_time: edited_time,
             blog_title: this.blog_title,
             blog_text: this.blog_text,
             hidden: this.blog_hidden,

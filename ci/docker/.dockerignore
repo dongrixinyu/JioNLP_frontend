@@ -1,0 +1,31 @@
+# ── Build artefacts ────────────────────────────
+node_modules/
+dist/
+.cache/
+
+# ── Version control ─────────────────────────────
+.git/
+.gitignore
+
+# ── Editor / OS noise ───────────────────────────
+.DS_Store
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# ── Logs ────────────────────────────────────────
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ── Local env files (never bake secrets into image) ──
+.env.local
+.env.*.local
+
+# ── Test & CI infra not needed in image ─────────
+tests/
+coverage/
+ci/
+
