@@ -11,5 +11,3 @@ nginx -t
 
 echo "[entrypoint] Starting nginx in foreground..."
 exec nginx -g "daemon off;"
-
-

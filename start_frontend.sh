@@ -133,5 +133,3 @@ if [[ "$CONTAINER_STATUS" == "running" ]]; then
 else
   error "Container failed to start. Check logs: docker logs $CONTAINER_NAME"
 fi
-
-

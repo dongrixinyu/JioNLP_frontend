@@ -1,42 +1,65 @@
 const { defineConfig } = require("@vue/cli-service");
-// const path = require('path');
-
 const webpack = require("webpack");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const CompressionWebpackPlugin = require("compression-webpack-plugin");
+
 const productionGzipExtensions = ["js", "css"];
-// const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = process.env.NODE_ENV === "production";
+const useAnalyzer = process.env.USE_ANALYZER === "true";
+
+// ── Dev proxy target — reads from .env.development ─────────────────────────
+// During `npm run serve`, all /blog_api/, /jio_api/, etc. requests are
+// forwarded to the local backend so you never hit CORS issues.
+const backendOrigin =
+  `http://${process.env.VUE_APP_BACKEND_IP || "127.0.0.1"}` +
+  `:${process.env.VUE_APP_BACKEND_PORT || 16666}`;
+
+const proxyPaths = ["/blog_api", "/jio_api", "/blog_image", "/trivials"];
+const devProxy = Object.fromEntries(
+  proxyPaths.map((path) => [
+    path,
+    {
+      target: backendOrigin,
+      changeOrigin: true,
+    },
+  ])
+);
 
 module.exports = defineConfig({
+  // ── Dev server ─────────────────────────────────────────────────
   devServer: {
+    port: parseInt(process.env.VUE_APP_FRONTEND_PORT || "8080", 10),
     client: {
-      overlay: false // 关闭错误和警告的遮罩层
+      overlay: false,
     },
-    compress: true // 关闭gzip压缩
+    compress: true,
+    proxy: devProxy,
   },
+
   transpileDependencies: true,
+
+  // ── Webpack chain ───────────────────────────────────────────────
   chainWebpack: (config) => {
-    config
-      .plugin("webpack-bundle-analyzer")
-      .use(require("webpack-bundle-analyzer").BundleAnalyzerPlugin);
-    // 入口文件
+    if (useAnalyzer) {
+      config
+        .plugin("webpack-bundle-analyzer")
+        .use(require("webpack-bundle-analyzer").BundleAnalyzerPlugin);
+    }
     config.entry.app = ["babel-polyfill", "./src/main.ts"];
-    // element-ui自动就挂载在Vue上了，这里不需要写它，在入口文件main.js中也不用再vue.use了
     config.externals = {
       vue: "Vue",
       vuex: "vuex",
       "vue-router": "VueRouter",
     };
   },
+
   productionSourceMap: false,
+
+  // ── Production-only plugins ─────────────────────────────────────
   configureWebpack: {
     plugins: [
-      // if(process.env.NODE_ENV === 'production') {
-      // Ignore all locale files of moment.js
-      // new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-      ...(process.env.NODE_ENV === "production"
+      ...(isProduction
         ? [
-            // 配置compression-webpack-plugin压缩
             new CompressionWebpackPlugin({
               algorithm: "gzip",
               test: new RegExp(
@@ -44,23 +67,16 @@ module.exports = defineConfig({
               ),
               threshold: 10240,
               minRatio: 0.8,
-              deleteOriginalAssets: false // 删除源文件
+              deleteOriginalAssets: false,
             }),
-            new webpack.optimize.LimitChunkCountPlugin({
-              maxChunks: 5,
-              // minChunkSize: 100
-            }),
+            new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 5 }),
             new UglifyJsPlugin({
               uglifyOptions: {
                 compress: {
-                  // warnings: false,
                   drop_console: true,
                   drop_debugger: true,
                 },
-                output: {
-                  // 去掉注释内容
-                  comments: true,
-                },
+                output: { comments: false },
               },
               sourceMap: false,
               parallel: true,

@@ -27,5 +27,4 @@ yarn-error.log*
 # ── Test & CI infra not needed in image ─────────
 tests/
 coverage/
-ci/
-
+# ci/
