@@ -3,7 +3,7 @@ __pycache__/
 .idea/
 *.py[cod]
 *$py.class
-.DS_Store
+*.DS_Store
 # jionlp_online
 raw_images
 
@@ -143,3 +143,4 @@ command.txt
 node_modules/
 
 *.log
+src/.DS_Store
