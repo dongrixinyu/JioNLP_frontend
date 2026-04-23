@@ -14,8 +14,9 @@
     "useDefineForClassFields": true,
     "sourceMap": true,
     "baseUrl": ".",
-    "types": [
-      "webpack-env"
+    "typeRoots": [
+      "node_modules/@types",
+      "node_modules/vue-router"
     ],
     "paths": {
       "@/*": [
