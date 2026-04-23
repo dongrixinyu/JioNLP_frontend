@@ -660,14 +660,19 @@ export default {
         return;
       }
 
-      // Resolve the blog_id to use for image storage
-      const resolved_blog_id = this.blog_id === 'newblog'
-        ? this.get_blog_id(this.effectiveEstablishedTime)
-        : this.blog_id;
-
-      if (!resolved_blog_id) {
-        this.preprocess_status = { message: '请先选择发布日期，以便确定图片存储路径。', type: 'warning' };
-        return;
+      // Bug fix 1: for new blogs, require the user to explicitly pick a date first.
+      // effectiveEstablishedTime falls back to current time, so we must check
+      // the picker directly — otherwise images get stored under today's date
+      // even if the blog will be published under a different date.
+      let resolved_blog_id: string;
+      if (this.blog_id === 'newblog') {
+        if (!this.blog_established_time_picker) {
+          this.preprocess_status = { message: '请先选择发布日期，以便确定图片存储路径（博客 ID）。', type: 'warning' };
+          return;
+        }
+        resolved_blog_id = this.get_blog_id(this.blog_established_time_picker);
+      } else {
+        resolved_blog_id = this.blog_id;
       }
 
       this.preprocess_loading = true;
@@ -686,23 +691,31 @@ export default {
           }
         });
 
-        if (response.data.is_ok) {
-          const new_text = response.data.detail;
-          const old_text = this.blog_text;
+        // Bug fix 2: check is_ok exists AND is true; extract text from detail.text
+        const resp = response.data;
+        if (resp.is_ok === true) {
+          const detail = resp.detail;
+          const new_text: string = detail.text;
+          const replaced: number = (detail.processed_images || []).length;
+          const failed: number  = (detail.failed_images   || []).length;
 
-          // Count how many image links were replaced
-          const oldCount = (old_text.match(/!\[.*?\]\(https?:\/\/(?!(?:www\.)?jionlp\.com)/g) || []).length;
-          const newCount = (new_text.match(/!\[.*?\]\(https?:\/\/(?!(?:www\.)?jionlp\.com)/g) || []).length;
-          const replaced = oldCount - newCount;
-
+          // Write the processed markdown back into the textarea
           this.blog_text = new_text;
+
+          const failMsg = failed > 0 ? `，${failed} 张下载失败（链接保持原样）` : '';
           this.preprocess_status = {
-            message: `预处理完成！共替换 ${replaced} 张图片链接为站内链接。`,
-            type: 'success'
+            message: `预处理完成！成功替换 ${replaced} 张图片链接为站内链接${failMsg}。`,
+            type: failed > 0 ? 'warning' : 'success'
           };
         } else {
+          // is_ok is false or missing
+          const errMsg = (response.data && response.data.detail)
+            ? (typeof response.data.detail === 'string'
+                ? response.data.detail
+                : JSON.stringify(response.data.detail))
+            : '服务器返回错误，请检查后端日志';
           this.preprocess_status = {
-            message: `预处理失败：${response.data.detail || '服务器返回错误'}`,
+            message: `预处理失败：${errMsg}`,
             type: 'error'
           };
         }
