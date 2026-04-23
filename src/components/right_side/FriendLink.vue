@@ -24,7 +24,8 @@ export default {
     return {
       $router: router,
       friend_links: [
-        {"title": "苏剑林-科学空间", "url": "https://kexue.fm/"}
+        {"title": "苏剑林-科学空间", "url": "https://kexue.fm/"},
+        {"title": "万象 AI 论文专利写作", "url": "https://jiojio.mixpaper.cn/"}
       ],
 
     };
@@ -52,7 +53,10 @@ export default {
 .friend-item {
   color: #444444;
   font-size: 14px;
+}
 
+.friend-item:hover {
+  color: #00B050;;
 }
 
 @media screen and (max-width: 800px) {

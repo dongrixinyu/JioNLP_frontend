@@ -176,7 +176,10 @@ export default {
   display: block;
   flex: 1;
   box-sizing: border-box;
-  padding: 16px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  padding-left: 30px;
+  padding-right: 30px;
   background-color: #FFFFFF;
 }
 
