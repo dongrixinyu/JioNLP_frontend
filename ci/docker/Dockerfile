@@ -11,8 +11,10 @@ COPY package.json package-lock.json* yarn.lock* ./
 # Install dependencies (prefer npm ci for reproducible builds)
 RUN if [ -f yarn.lock ]; then \
       yarn install --frozen-lockfile; \
+    elif [ -f package-lock.json ]; then \
+      npm ci --legacy-peer-deps; \
     else \
-      npm ci; \
+      npm install --legacy-peer-deps; \
     fi
 
 # Copy the rest of the source
