@@ -1,21 +1,10 @@
 # ─────────────────────────────────────────────
 # Stage 1 — Build the Vue app
 # ─────────────────────────────────────────────
-FROM node:18-alpine AS builder
+FROM jionlp_online:v2.0 AS builder
 
 WORKDIR /app
 
-# Copy package files first for better layer caching
-COPY package.json package-lock.json* yarn.lock* ./
-
-# Install dependencies (prefer npm ci for reproducible builds)
-RUN if [ -f yarn.lock ]; then \
-      yarn install --frozen-lockfile; \
-    elif [ -f package-lock.json ]; then \
-      npm ci --legacy-peer-deps; \
-    else \
-      npm install --legacy-peer-deps; \
-    fi
 
 # Copy the rest of the source
 COPY . .
@@ -43,5 +32,6 @@ RUN chmod +x /entrypoint.sh
 
 # Expose HTTP port (SSL is terminated by the host reverse proxy or Certbot outside)
 EXPOSE 80
+EXPOSE 443
 
 ENTRYPOINT ["/entrypoint.sh"]
