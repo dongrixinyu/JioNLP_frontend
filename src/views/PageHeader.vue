@@ -26,17 +26,14 @@
       </a-button>
     </div>
     <div id="vertical-navigator" :key="componentKey">
-      <a-layout-sider width="150px" style="background: #fff">
+      <a-layout-sider width="150px" style="background: rgb(10, 31, 47);">
         <a-menu
           mode="inline"
-          theme="light"
+          theme="dark"
           :forceSubMenuRender="true"
           :inline-collapsed="collapsed"
           v-model:openKeys="this.openKeys"
         >
-          <a-menu-item key="10">
-            <router-link id="nlp_online" to="/jionlp_online">NLP在线</router-link>
-          </a-menu-item>
           <a-menu-item v-for="item in blog_first_directory" :key="10 + item.key">
             <router-link :id="10 + item.key" :to="'/blog' + item.path">
               {{ item.label }}
@@ -48,13 +45,10 @@
     </div>
     <div id="horizontal-navigator">
       <a-menu
-        theme="light"
+        theme="dark"
         mode="horizontal"
         :style="{ lineHeight: '44px', backgroundColor: 'transparent' }"
       >
-        <a-menu-item style="padding-left: 20px !important;" key="0">
-          <router-link id="nlp_online" to="/jionlp_online">NLP在线</router-link>
-        </a-menu-item>
         <a-menu-item style="padding-left: 20px !important;" v-for="item in blog_first_directory" :key="item.key">
           <router-link :id="item.key" :to="'/blog' + item.path">
             {{ item.label }}
@@ -239,7 +233,7 @@ export default defineComponent({
   z-index: 10;
   margin-left: 0px;
   padding: 10px 0px 0px 0px;
-  background-color: #ffffff;
+  background-color: rgb(10, 31, 47);
   min-width: 100%;
   min-height: 60px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
@@ -310,7 +304,7 @@ export default defineComponent({
     height: 90%;
     display: none;
     margin-top: 50px;
-    background: #fff;
+    background: rgb(10, 31, 47);
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     border-radius: 0 0 8px 0;
   }
