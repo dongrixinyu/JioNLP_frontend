@@ -41,7 +41,6 @@ created () {
   padding: 15px;
   padding-left: 0;
   position: relative;
-  width: 250px;
 }
 
 @media screen and (max-width: 800px) {

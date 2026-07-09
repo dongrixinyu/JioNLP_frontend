@@ -24,7 +24,7 @@
               </div>
             </div>
             <div class="list-item-meta-content">
-              <h4 class="list-item-meta-title" :style="this.get_title_color()">
+              <h4 class="list-item-meta-title">
                 <a :href="item.blog_url">{{ item.blog_title }}</a>
               </h4>
               <div class="list-item-meta-description">
@@ -263,20 +263,48 @@ export default {
 .list-item-meta-title {
   margin-bottom: 12px;
   font-size: 18px;
-  line-height: 32px;
+  font-weight: 600;
+  line-height: 1.5; /* 推荐使用相对单位，比固定 32px 更灵活 */
   box-sizing: border-box;
 }
 
 .list-item-meta-title > a {
-  color: #000000;
-  margin-left: 12px;
+  /* 1. 撑满宽度：改为 block，并设置 100% 宽度 */
+  display: block;
+  width: 100%;
+
+  /* 2. 固定底色：设置一个柔和的浅灰色背景 */
+  background-color: #e7e8ea;
+
+  /* 3. 内边距与圆角：让文字有呼吸感，四周圆润 */
+  padding: 10px 16px;
+  border-radius: 8px;
+
+  /* 4. 增加美感：左侧加一条 4px 的强调线，如果 get_title_color() 设置了 color，这里可以用 currentColor 继承颜色 */
+  border-left: 4px solid currentColor;
+
+  /* 移除之前的 margin-left: -8px，因为现在是 block 元素了 */
   box-sizing: border-box;
   text-decoration: none;
-  transition: color 0.3s;
+  color: #1d2129; /* 默认颜色，会被 Vue 的内联样式覆盖 */
+
+  /* 5. 过渡动画：让悬浮效果更平滑 */
+  transition: all 0.25s ease;
+
+  /* 防止超长文本破坏布局 */
+  word-break: break-all;
 }
 
 .list-item-meta-title > a:hover {
-  color: #DDDDDD; /* 悬停时的链接颜色 */
+  /* 悬浮时的固定底色变深 */
+  background-color: #eef0f3;
+
+  /* 增加一点立体感：阴影和微微上移 */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+
+  /* 文字颜色加深或改变 (注意：如果 Vue 内联样式优先级太高，可在此加 !important) */
+  color: #165dff !important;
 }
 
 .list-item-meta-description {

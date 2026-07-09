@@ -231,10 +231,16 @@ export default defineComponent({
 #page_header {
   position: fixed;
   z-index: 10;
-  margin-left: 0px;
+  top: 0; /* 固定在顶部 */
+  left: 0; /* 关键：配合 right 和 margin 实现居中 */
+  right: 0; /* 关键：配合 left 和 margin 实现居中 */
+  margin-left: auto; /* 关键：自动计算外边距 */
+  margin-right: auto; /* 关键：自动计算外边距 */
   padding: 10px 0px 0px 0px;
   background-color: rgb(10, 31, 47);
-  min-width: 100%;
+  /* 删掉 min-width: 100%; 这行是罪魁祸首 */
+  width: 100%; /* 改为 width: 100% */
+  max-width: 1200px; /* 现在 max-width 就能生效了 */
   min-height: 60px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   border-bottom: 1px solid #f0f0f0;
@@ -311,10 +317,11 @@ export default defineComponent({
 }
 
 .header-links {
-  position: fixed;
-  right: 0px;
-  margin-left: auto;
-  margin-right: 20px;
+  position: absolute; /* 关键修改：从 fixed 改为 absolute */
+  right: 20px;        /* 关键修改：从 0px 改为 20px，替代原来的 margin-right */
+  top: 10px;          /* 补充：加上 top 定位，保持垂直位置与之前一致 */
+  /* 删掉 margin-left: auto; 绝对定位下不需要这个 */
+  /* 删掉 margin-right: 20px; 已经用 right: 20px 替代 */
   display: flex;
   align-items: center;
   height: 44px;
