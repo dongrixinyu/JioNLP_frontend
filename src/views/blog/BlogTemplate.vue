@@ -234,13 +234,13 @@ export default {
 <style lang="less" scoped>
 #blog-template {
   margin-left: 250px;
-  min-width: calc(98vw - 500px);
+  min-width: calc(100% - 500px);
 }
 
 @media screen and (max-width: 800px) {
   #blog-template {
     margin-left: 0px;
-    min-width: 98vw;
+    min-width: 100%;
   }
 }
 
