@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="fixed-width-container">
     <a-layout style="flex-direction: row">
       <router-view> </router-view>
     </a-layout>
@@ -24,4 +24,15 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.fixed-width-container {
+  width: 1200px;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 1200px) {
+  .fixed-width-container {
+    width: 100%;
+  }
+}
+</style>
