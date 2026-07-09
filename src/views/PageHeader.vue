@@ -230,17 +230,14 @@ export default defineComponent({
 <style lang="less" scoped>
 #page_header {
   position: fixed;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
   z-index: 10;
+  margin-left: 0px;
   padding: 10px 0px 0px 0px;
   background-color: rgb(10, 31, 47);
-  width: 1200px;
+  min-width: 100%;
   min-height: 60px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   border-bottom: 1px solid #f0f0f0;
-  box-sizing: border-box;
 }
 
 #jionlp_logo {
@@ -257,16 +254,14 @@ export default defineComponent({
 // 大于 800 像素宽
 @media screen and (min-width: 800px) {
   .logo {
-    position: absolute;
-    left: 30px;
-    top: 10px;
+    position: fixed;
+    margin-left: 30px;
     margin-right: auto;
   }
 
   #horizontal-navigator {
-    position: absolute;
-    left: 180px;
-    top: 10px;
+    position: fixed;
+    margin-left: 180px;
     width: 581px;
     height: 44px;
   }
@@ -276,49 +271,39 @@ export default defineComponent({
   }
 
   #vertical-navigator {
-    position: absolute;
-    top: 60px;
-    left: 0;
+    position: fixed;
     display: none;
   }
 }
 
 // 小于 800 像素宽
 @media screen and (max-width: 801px) {
-  #page_header {
-    width: 100%;
-    left: 0;
-    transform: none;
-  }
-
   .logo {
-    position: absolute;
-    left: 90px;
-    top: 10px;
+    position: fixed;
+    margin-left: 90px;
     margin-right: auto;
   }
 
   #horizontal-navigator {
-    position: absolute;
+    position: fixed;
     display: none;
   }
 
   #vertical-navigator-button {
     z-index: 20;
     display: block;
-    position: absolute;
+    position: fixed;
     top: 10px;
     left: 9px;
   }
 
   #vertical-navigator {
     z-index: 9;
-    position: absolute;
+    position: fixed;
     overflow-y: scroll;
     height: 90%;
     display: none;
-    top: 60px;
-    left: 0;
+    margin-top: 50px;
     background: rgb(10, 31, 47);
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     border-radius: 0 0 8px 0;
@@ -326,14 +311,13 @@ export default defineComponent({
 }
 
 .header-links {
-  position: absolute;
+  position: fixed;
   right: 0px;
   margin-left: auto;
   margin-right: 20px;
   display: flex;
   align-items: center;
   height: 44px;
-  top: 10px;
 }
 .header-link-icon-1 {
   width: 32px;
