@@ -29,7 +29,7 @@
       <a-layout-sider width="150px" style="background: #fff">
         <a-menu
           mode="inline"
-          theme="dark"
+          theme="light"
           :forceSubMenuRender="true"
           :inline-collapsed="collapsed"
           v-model:openKeys="this.openKeys"
@@ -48,9 +48,9 @@
     </div>
     <div id="horizontal-navigator">
       <a-menu
-        theme="dark"
+        theme="light"
         mode="horizontal"
-        :style="{ lineHeight: '44px', backgroundColor: 'black' }"
+        :style="{ lineHeight: '44px', backgroundColor: 'transparent' }"
       >
         <a-menu-item style="padding-left: 20px !important;" key="0">
           <router-link id="nlp_online" to="/jionlp_online">NLP在线</router-link>
@@ -236,19 +236,17 @@ export default defineComponent({
 <style lang="less" scoped>
 #page_header {
   position: fixed;
-  // display: block;
   z-index: 10;
   margin-left: 0px;
   padding: 10px 0px 0px 0px;
-  background-color: black;
-  // float: top;
-  // text-align: left;
+  background-color: #ffffff;
   min-width: 100%;
   min-height: 60px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid #f0f0f0;
 }
 
 #jionlp_logo {
-  // display: inline-block;
   width: 125px;
   height: 40px;
   margin-left: 0px;
@@ -265,7 +263,6 @@ export default defineComponent({
     position: fixed;
     margin-left: 30px;
     margin-right: auto;
-    // float: left;
   }
 
   #horizontal-navigator {
@@ -291,7 +288,6 @@ export default defineComponent({
     position: fixed;
     margin-left: 90px;
     margin-right: auto;
-    // float: left;
   }
 
   #horizontal-navigator {
@@ -314,29 +310,40 @@ export default defineComponent({
     height: 90%;
     display: none;
     margin-top: 50px;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-radius: 0 0 8px 0;
   }
 }
 
-
-// @media screen and (min-width: 800px) {
 .header-links {
   position: fixed;
   right: 0px;
   margin-left: auto;
   margin-right: 20px;
-  // float: right;
+  display: flex;
+  align-items: center;
+  height: 44px;
 }
 .header-link-icon-1 {
-  width: 43px;
-  height: 43px;
-  margin-left: 5px;
-  margin-right: 5px;
-}
-.header-link-icon-2 {
   width: 32px;
   height: 32px;
-  margin-left: 5px;
-  margin-right: 5px;
+  margin-left: 10px;
+  margin-right: 10px;
+  border-radius: 50%;
+  transition: opacity 0.3s;
 }
-
+.header-link-icon-1:hover {
+  opacity: 0.8;
+}
+.header-link-icon-2 {
+  width: 28px;
+  height: 28px;
+  margin-left: 10px;
+  margin-right: 10px;
+  transition: opacity 0.3s;
+}
+.header-link-icon-2:hover {
+  opacity: 0.8;
+}
 </style>

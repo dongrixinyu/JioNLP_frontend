@@ -43,4 +43,30 @@ export default defineComponent({
 .site-layout-background {
   background: #fff;
 }
+
+.ant-layout-footer {
+  background: #ffffff !important;
+  border-top: 1px solid #e8e8e8;
+  color: #666666 !important;
+  padding: 24px 50px;
+  font-size: 14px;
+}
+
+.ant-layout-footer b {
+  color: #333333;
+  font-weight: 500;
+}
+
+.ant-layout-footer a {
+  color: #666666;
+  transition: color 0.3s;
+}
+
+.ant-layout-footer a:hover {
+  color: #1890ff;
+}
+
+.ant-layout-footer p {
+  margin-bottom: 8px;
+}
 </style>
