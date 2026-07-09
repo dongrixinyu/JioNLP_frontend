@@ -1,6 +1,6 @@
 const { defineConfig } = require("@vue/cli-service");
 const webpack = require("webpack");
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 const CompressionWebpackPlugin = require("compression-webpack-plugin");
 
 const productionGzipExtensions = ["js", "css"];
@@ -8,8 +8,6 @@ const isProduction = process.env.NODE_ENV === "production";
 const useAnalyzer = process.env.USE_ANALYZER === "true";
 
 // ── Dev proxy target — reads from .env.development ─────────────────────────
-// During `npm run serve`, all /blog_api/, /jio_api/, etc. requests are
-// forwarded to the local backend so you never hit CORS issues.
 const backendOrigin =
   `http://${process.env.VUE_APP_BACKEND_IP || "127.0.0.1"}` +
   `:${process.env.VUE_APP_BACKEND_PORT || 16666}`;
@@ -26,7 +24,6 @@ const devProxy = Object.fromEntries(
 );
 
 module.exports = defineConfig({
-  // ── Dev server ─────────────────────────────────────────────────
   devServer: {
     port: parseInt(process.env.VUE_APP_FRONTEND_PORT || "8080", 10),
     client: {
@@ -38,7 +35,6 @@ module.exports = defineConfig({
 
   transpileDependencies: true,
 
-  // ── Webpack chain ───────────────────────────────────────────────
   chainWebpack: (config) => {
     if (useAnalyzer) {
       config
@@ -55,7 +51,6 @@ module.exports = defineConfig({
 
   productionSourceMap: false,
 
-  // ── Production-only plugins ─────────────────────────────────────
   configureWebpack: {
     plugins: [
       ...(isProduction
@@ -70,19 +65,29 @@ module.exports = defineConfig({
               deleteOriginalAssets: false,
             }),
             new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 5 }),
-            new UglifyJsPlugin({
-              uglifyOptions: {
+          ]
+        : []),
+    ],
+
+    optimization: isProduction
+      ? {
+          minimize: true,
+          minimizer: [
+            new TerserPlugin({
+              parallel: true,
+              extractComments: false,
+              terserOptions: {
                 compress: {
                   drop_console: true,
                   drop_debugger: true,
                 },
-                output: { comments: false },
+                format: {
+                  comments: false,
+                },
               },
-              sourceMap: false,
-              parallel: true,
             }),
-          ]
-        : []),
-    ],
+          ],
+        }
+      : {},
   },
 });

@@ -1,11 +1,12 @@
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
-
+const TerserPlugin = require('terser-webpack-plugin')
 module.exports = {
   optimization: {
     minimizer: [
-      new UglifyJsPlugin({
-        parallel: true,
-      }),
-    ],
-  },
-};
+      new TerserPlugin({
+        terserOptions: {
+          compress: { drop_console: true } // 可选：删除console
+        }
+      })
+    ]
+  }
+}

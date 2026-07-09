@@ -11,9 +11,7 @@
     <div class="notification_content">
       <h5>&emsp;</h5>
       <h5>🐳 扫码回复【进群】🐳</h5>
-      <h5>🍀 加入自然语言处理交流群 🍀</h5>
-      <h5>🍓 扫码回复【下载】🍓</h5>
-      <h5>🐤 下载算法课件与数据集 🐤</h5>
+      <h5>🍀 加入AI交流群 🍀</h5>
       <h5>&emsp;</h5>
       <img
         class="qr_code_for_gh"
