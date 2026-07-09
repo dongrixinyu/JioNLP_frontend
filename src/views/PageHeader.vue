@@ -254,7 +254,8 @@ export default defineComponent({
 }
 
 .ant-menu {
-  font-size: 15px;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 // 大于 800 像素宽
