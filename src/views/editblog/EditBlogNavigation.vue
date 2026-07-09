@@ -11,10 +11,15 @@
       </a-button>
     </div>
     <div id="expand" :key="componentKey">
-      <a-layout-sider width="234px" style="background: #fff">
+      <a-layout-sider
+        class="edit-navigation-sider"
+        width="234px"
+        style="background: #fff"
+      >
         <a-menu
+          class="edit-navigation-menu"
           mode="inline"
-          theme="dark"
+          theme="light"
           :forceSubMenuRender="true"
           :inline-collapsed="collapsed"
           v-model:openKeys="this.openKeys"
@@ -250,8 +255,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="less">
-
+<style lang="less" scoped>
 #navigation-button {
   z-index: 20;
   display: block;
@@ -263,16 +267,79 @@ export default defineComponent({
 #expand {
   z-index: 9;
   position: fixed;
-  overflow-y: scroll;
+  overflow-y: auto;
   height: 90%;
+  width: 234px;
   text-overflow: fade;
-  // padding-left: 0px;
+}
+
+.edit-navigation-sider {
+  background: #ffffff !important;
+  border: 1px solid #e6edf7;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 14px 32px rgba(36, 52, 71, 0.08);
+}
+
+.edit-navigation-menu {
+  border-right: none !important;
+  background: transparent !important;
+  padding: 10px 0;
+}
+
+:deep(.edit-navigation-menu .ant-menu-item),
+:deep(.edit-navigation-menu .ant-menu-submenu-title) {
+  margin: 4px 8px !important;
+  border-radius: 12px;
+  color: #355070;
+  transition: all 0.25s ease;
+}
+
+:deep(.edit-navigation-menu .ant-menu-item:hover),
+:deep(.edit-navigation-menu .ant-menu-submenu-title:hover) {
+  color: #2f6bff;
+  background: #f3f7ff;
+}
+
+:deep(.edit-navigation-menu .ant-menu-item-selected) {
+  background: linear-gradient(135deg, #eef4ff 0%, #f7faff 100%) !important;
+  color: #2f6bff !important;
+  font-weight: 600;
+}
+
+:deep(.edit-navigation-menu .ant-menu-submenu-selected > .ant-menu-submenu-title) {
+  color: #2f6bff !important;
+}
+
+:deep(.edit-navigation-menu .ant-menu-inline),
+:deep(.edit-navigation-menu .ant-menu-sub) {
+  background: transparent !important;
+}
+
+:deep(.edit-navigation-menu a) {
+  color: inherit;
+}
+
+:deep(.edit-navigation-menu .ant-menu-item .anticon),
+:deep(.edit-navigation-menu .ant-menu-submenu-title .anticon) {
+  color: #7b8ba7;
+}
+
+:deep(.edit-navigation-menu .ant-menu-item-selected .anticon),
+:deep(.edit-navigation-menu .ant-menu-submenu-selected > .ant-menu-submenu-title .anticon) {
+  color: #2f6bff;
+}
+
+#navigation-button :deep(.ant-btn) {
+  border-radius: 14px;
+  box-shadow: 0 10px 24px rgba(47, 107, 255, 0.24);
 }
 
 @media screen and (max-width: 800px) {
   #expand {
     position: fixed;
     display: none;
+    width: 250px;
   }
 }
 
@@ -281,5 +348,4 @@ export default defineComponent({
     display: none;
   }
 }
-
 </style>

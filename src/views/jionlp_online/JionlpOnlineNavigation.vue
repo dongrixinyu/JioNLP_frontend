@@ -12,10 +12,15 @@
       </a-button>
     </div>
     <div id="expand">
-      <a-layout-sider width="220px" style="background: #fff">
+      <a-layout-sider
+        class="navigation-sider"
+        width="220px"
+        style="background: #fff"
+      >
         <a-menu
+          class="navigation-menu"
           mode="inline"
-          theme="dark"
+          theme="light"
           :inline-collapsed="collapsed"
           v-model:openKeys="openKeys"
         >
@@ -207,12 +212,87 @@ export default defineComponent({
 #expand {
   z-index: 9;
   position: static;
-  width: 200;
+  width: 220px;
+  min-width: 220px;
+}
+
+.navigation-sider {
+  background: #ffffff !important;
+  border: 1px solid #e6edf7;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 14px 32px rgba(36, 52, 71, 0.08);
+  max-height: calc(100vh - 96px);
+  overflow-y: auto;
+}
+
+.navigation-menu {
+  border-right: none !important;
+  background: transparent !important;
+  padding: 10px 0;
+}
+
+:deep(.navigation-menu .ant-menu-item),
+:deep(.navigation-menu .ant-menu-submenu-title) {
+  margin: 4px 8px !important;
+  border-radius: 12px;
+  color: #355070;
+  transition: all 0.25s ease;
+}
+
+:deep(.navigation-menu .ant-menu-item:hover),
+:deep(.navigation-menu .ant-menu-submenu-title:hover) {
+  color: #2f6bff;
+  background: #f3f7ff;
+}
+
+:deep(.navigation-menu .ant-menu-item-selected) {
+  background: linear-gradient(135deg, #eef4ff 0%, #f7faff 100%) !important;
+  color: #2f6bff !important;
+  font-weight: 600;
+}
+
+:deep(.navigation-menu .ant-menu-submenu-selected > .ant-menu-submenu-title) {
+  color: #2f6bff !important;
+}
+
+:deep(.navigation-menu .ant-menu-inline),
+:deep(.navigation-menu .ant-menu-sub) {
+  background: transparent !important;
+}
+
+:deep(.navigation-menu a) {
+  color: inherit;
+}
+
+:deep(.navigation-menu .ant-menu-item .anticon),
+:deep(.navigation-menu .ant-menu-submenu-title .anticon) {
+  color: #7b8ba7;
+}
+
+:deep(.navigation-menu .ant-menu-item-selected .anticon),
+:deep(.navigation-menu .ant-menu-submenu-selected > .ant-menu-submenu-title .anticon) {
+  color: #2f6bff;
+}
+
+#navigation-button :deep(.ant-btn) {
+  border-radius: 14px;
+  box-shadow: 0 10px 24px rgba(47, 107, 255, 0.24);
 }
 
 @media screen and (max-width: 800px) {
   #expand {
     position: fixed;
+    top: 72px;
+    left: 16px;
+    width: 240px;
+    min-width: 240px;
+    display: none;
+  }
+
+  .navigation-sider {
+    max-height: calc(100vh - 88px);
+    box-shadow: 0 18px 36px rgba(15, 23, 42, 0.18);
   }
 }
 
