@@ -77,7 +77,7 @@ export default {
 <style lang="less" scoped>
 .ad-image {
   font-weight: bold;
-  width: 190px;
+  width: 270px;
   // margin: 15px auto;
   margin-bottom: 0px;
   display: flex;
